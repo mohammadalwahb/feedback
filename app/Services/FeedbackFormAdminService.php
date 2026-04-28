@@ -7,6 +7,7 @@ use App\Enums\FeedbackQuestionType;
 use App\Models\FeedbackForm;
 use App\Models\FeedbackFormVersion;
 use App\Models\FeedbackQuestion;
+use App\Models\FeedbackResponseDraft;
 use Illuminate\Support\Facades\DB;
 
 class FeedbackFormAdminService
@@ -144,5 +145,24 @@ class FeedbackFormAdminService
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
         ]);
+    }
+
+    public function deleteForm(FeedbackForm $form, \App\Models\User $admin): void
+    {
+        DB::transaction(function () use ($form, $admin) {
+            $form->load('versions.questions');
+            $versionIds = $form->versions->pluck('id');
+            if ($versionIds->isNotEmpty()) {
+                FeedbackResponseDraft::query()->whereIn('feedback_form_version_id', $versionIds)->delete();
+            }
+            foreach ($form->versions as $version) {
+                foreach ($version->questions as $question) {
+                    $question->delete();
+                }
+                $version->delete();
+            }
+            $form->delete();
+            $this->auditLogger->log($admin, 'feedback_form.deleted', $form);
+        });
     }
 }

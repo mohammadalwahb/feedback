@@ -18,9 +18,14 @@
                     <tr class="border-b">
                         <td class="p-3">{{ $f->title_en }}</td>
                         <td class="p-3">{{ $f->status->value }}</td>
-                        <td class="p-3 text-right">
+                        <td class="p-3 text-right whitespace-nowrap">
                             <a href="{{ route('admin.feedback.forms.edit', $f) }}" class="text-indigo-600">{{ __('admin.edit') }}</a>
                             <a href="{{ route('admin.feedback.forms.preview', $f) }}" class="text-slate-600">{{ __('feedback.preview') }}</a>
+                            <form action="{{ route('admin.feedback.forms.destroy', $f) }}" method="post" class="inline" onsubmit="return confirm('{{ __('admin.confirm_delete') }}')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600">{{ __('admin.delete') }}</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

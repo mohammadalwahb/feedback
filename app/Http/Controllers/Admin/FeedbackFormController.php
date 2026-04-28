@@ -12,6 +12,7 @@ use App\Services\AuditLogger;
 use App\Services\FeedbackFormAdminService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -43,6 +44,7 @@ class FeedbackFormController extends Controller
 
     public function edit(FeedbackForm $form): View
     {
+        Gate::authorize('update', $form);
         $version = $form->versions()->orderByDesc('version_number')->first();
         if (! $version) {
             $version = $this->forms->ensureInitialVersion($form);
@@ -54,6 +56,7 @@ class FeedbackFormController extends Controller
 
     public function update(Request $request, FeedbackForm $form): RedirectResponse
     {
+        Gate::authorize('update', $form);
         $data = $request->validate([
             'title_en' => ['required', 'string', 'max:255'],
             'title_ku' => ['nullable', 'string', 'max:255'],
@@ -77,6 +80,7 @@ class FeedbackFormController extends Controller
 
     public function publishVersion(Request $request, FeedbackForm $form): RedirectResponse
     {
+        Gate::authorize('update', $form);
         $this->forms->publishNewVersion($form, $request->user());
 
         return redirect()->route('admin.feedback.forms.edit', $form)->with('ok', __('messages.version_created'));
@@ -84,6 +88,7 @@ class FeedbackFormController extends Controller
 
     public function updateVersion(Request $request, FeedbackForm $form, FeedbackFormVersion $version): RedirectResponse
     {
+        Gate::authorize('update', $form);
         if ($version->feedback_form_id !== $form->id) {
             abort(404);
         }
@@ -105,6 +110,7 @@ class FeedbackFormController extends Controller
 
     public function storeQuestion(Request $request, FeedbackForm $form, FeedbackFormVersion $version): RedirectResponse
     {
+        Gate::authorize('update', $form);
         if ($version->feedback_form_id !== $form->id) {
             abort(404);
         }
@@ -119,6 +125,7 @@ class FeedbackFormController extends Controller
 
     public function updateQuestion(Request $request, FeedbackForm $form, FeedbackFormVersion $version, FeedbackQuestion $question): RedirectResponse
     {
+        Gate::authorize('update', $form);
         if ($version->feedback_form_id !== $form->id || $question->feedback_form_version_id !== $version->id) {
             abort(404);
         }
@@ -131,6 +138,7 @@ class FeedbackFormController extends Controller
 
     public function destroyQuestion(Request $request, FeedbackForm $form, FeedbackFormVersion $version, FeedbackQuestion $question): RedirectResponse
     {
+        Gate::authorize('update', $form);
         if ($version->feedback_form_id !== $form->id || $question->feedback_form_version_id !== $version->id) {
             abort(404);
         }
@@ -142,6 +150,7 @@ class FeedbackFormController extends Controller
 
     public function reorderQuestions(Request $request, FeedbackForm $form, FeedbackFormVersion $version): RedirectResponse
     {
+        Gate::authorize('update', $form);
         if ($version->feedback_form_id !== $form->id) {
             abort(404);
         }
@@ -156,11 +165,20 @@ class FeedbackFormController extends Controller
 
     public function preview(FeedbackForm $form): View
     {
+        Gate::authorize('update', $form);
         $version = $form->versions()->orderByDesc('version_number')->first();
         abort_if(! $version, 404);
         $questions = $version->questions()->orderBy('sort_order')->get();
 
         return view('admin.feedback.forms.preview', compact('form', 'version', 'questions'));
+    }
+
+    public function destroy(Request $request, FeedbackForm $form): RedirectResponse
+    {
+        Gate::authorize('delete', $form);
+        $this->forms->deleteForm($form, $request->user());
+
+        return redirect()->route('admin.feedback.forms.index')->with('ok', __('messages.deleted'));
     }
 
     protected function prepareQuestionRequest(Request $request): void

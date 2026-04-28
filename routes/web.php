@@ -64,6 +64,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('feedback/forms', [FeedbackFormController::class, 'store'])->name('feedback.forms.store');
     Route::get('feedback/forms/{form}/edit', [FeedbackFormController::class, 'edit'])->name('feedback.forms.edit');
     Route::put('feedback/forms/{form}', [FeedbackFormController::class, 'update'])->name('feedback.forms.update');
+    Route::delete('feedback/forms/{form}', [FeedbackFormController::class, 'destroy'])->name('feedback.forms.destroy');
     Route::post('feedback/forms/{form}/versions', [FeedbackFormController::class, 'publishVersion'])->name('feedback.forms.versions.publish');
     Route::put('feedback/forms/{form}/versions/{version}', [FeedbackFormController::class, 'updateVersion'])->name('feedback.forms.versions.update');
     Route::post('feedback/forms/{form}/versions/{version}/questions', [FeedbackFormController::class, 'storeQuestion'])->name('feedback.forms.questions.store');
