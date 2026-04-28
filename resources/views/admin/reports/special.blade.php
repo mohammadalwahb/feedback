@@ -32,5 +32,5 @@
             </tbody>
         </table>
     </div>
-    @push('scripts')<script>document.addEventListener('DOMContentLoaded',()=>{new DataTable('#tbl',{pageLength:25});});</script>@endpush
+    @push('scripts')<script>document.addEventListener('DOMContentLoaded',()=>{window.initAdminDataTable('#tbl');});</script>@endpush
 @endsection

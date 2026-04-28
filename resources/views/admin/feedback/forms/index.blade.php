@@ -28,5 +28,5 @@
         </table>
     </div>
     <div class="mt-4">{{ $items->links() }}</div>
-    @push('scripts')<script>document.addEventListener('DOMContentLoaded',()=>{new DataTable('#tbl',{pageLength:20});});</script>@endpush
+    @push('scripts')<script>document.addEventListener('DOMContentLoaded',()=>{window.initAdminDataTable('#tbl',{pageLength:20});});</script>@endpush
 @endsection

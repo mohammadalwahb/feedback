@@ -89,18 +89,21 @@ class ReportController extends Controller
     {
         $filters = $request->only(['college_id', 'department_id', 'semester_id', 'subject', 'form_version_id']);
         $filters = array_filter($filters, fn ($v) => $v !== null && $v !== '');
-        $versionId = (int) ($filters['form_version_id'] ?? FeedbackFormVersion::query()
-            ->where('accepts_submissions', true)
-            ->orderByDesc('id')
-            ->value('id') ?? 0);
-        abort_if($versionId === 0, 404);
+        if (isset($filters['form_version_id'])) {
+            $request->validate([
+                'form_version_id' => ['exists:feedback_form_versions,id'],
+            ]);
+        }
+
+        $versions = FeedbackFormVersion::query()->orderByDesc('id')->limit(50)->get();
+        $defaultVersionId = $versions->firstWhere('accepts_submissions', true)?->id
+            ?? $versions->first()?->id;
+        $versionId = isset($filters['form_version_id']) ? (int) $filters['form_version_id'] : $defaultVersionId;
         unset($filters['form_version_id']);
 
-        $rows = $this->reports->evaluationResultRows($versionId, $filters);
+        $rows = $versionId ? $this->reports->evaluationResultRows($versionId, $filters) : [];
         $lists = $this->reports->filterLists();
-        $versions = FeedbackFormVersion::query()->orderByDesc('id')->limit(50)->get();
-
-        $questions = $this->resultQuestionColumns($versionId, $rows);
+        $questions = $versionId ? $this->resultQuestionColumns((int) $versionId, $rows) : [];
 
         return view('admin.reports.results', compact('rows', 'lists', 'filters', 'versions', 'versionId', 'questions'));
     }

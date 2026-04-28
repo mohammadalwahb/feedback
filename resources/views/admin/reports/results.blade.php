@@ -26,7 +26,9 @@
 
     @php $exportQuery = array_merge(request()->query(), ['form_version_id' => $versionId]); @endphp
     <div class="mb-4">
-        <a class="admin-btn-secondary py-2 text-sm" href="{{ route('admin.reports.results.export.excel', $exportQuery) }}">{{ __('reports.export_results_excel') }}</a>
+        @if($versionId)
+            <a class="admin-btn-secondary py-2 text-sm" href="{{ route('admin.reports.results.export.excel', $exportQuery) }}">{{ __('reports.export_results_excel') }}</a>
+        @endif
     </div>
 
     <div class="overflow-x-auto admin-card">
@@ -70,9 +72,7 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                if (document.getElementById('tbl-results').querySelector('tbody tr td[colspan]') === null) {
-                    new DataTable('#tbl-results', { pageLength: 25 });
-                }
+                window.initAdminDataTable('#tbl-results');
             });
         </script>
     @endpush

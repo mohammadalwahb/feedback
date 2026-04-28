@@ -130,6 +130,30 @@
     @endif
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script>
+        window.initAdminDataTable = function (tableRef, options = {}) {
+            const el = typeof tableRef === 'string' ? document.querySelector(tableRef) : tableRef;
+            if (!el || el.querySelector('tbody tr td[colspan]') !== null) {
+                return null;
+            }
+            const defaults = {
+                pageLength: 25,
+                lengthMenu: [10, 25, 50, 100],
+                lengthChange: true,
+                searching: true,
+                paging: true,
+                info: true,
+            };
+            const opts = Object.assign({}, defaults, options);
+            if (window.jQuery && window.jQuery.fn && window.jQuery.fn.DataTable) {
+                return window.jQuery(el).DataTable(opts);
+            }
+            if (typeof DataTable !== 'undefined') {
+                return new DataTable(el, opts);
+            }
+            return null;
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     @if($isAdminLayout)

@@ -48,7 +48,7 @@
                 document.getElementById(inputId).value = typed;
                 document.getElementById(formId).submit();
             };
-            document.addEventListener('DOMContentLoaded', () => { new DataTable('#tbl', { pageLength: 25 }); });
+            document.addEventListener('DOMContentLoaded', () => { window.initAdminDataTable('#tbl'); });
         </script>
     @endpush
 @endsection
