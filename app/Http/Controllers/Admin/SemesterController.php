@@ -17,7 +17,7 @@ class SemesterController extends Controller
 
     public function index(): View
     {
-        $items = Semester::query()->orderBy('name_en')->paginate(25);
+        $items = Semester::query()->orderBy('name_en')->get();
 
         return view('admin.semesters.index', compact('items'));
     }

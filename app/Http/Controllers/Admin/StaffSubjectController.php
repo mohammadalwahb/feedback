@@ -27,7 +27,7 @@ class StaffSubjectController extends Controller
         $items = StaffSubject::query()
             ->with(['college', 'department', 'semester'])
             ->orderBy('instructor_name')
-            ->paginate(25);
+            ->get();
 
         return view('admin.staff.index', compact('items'));
     }

@@ -24,7 +24,7 @@ class StudentController extends Controller
 
     public function index(): View
     {
-        $items = Student::query()->with(['college', 'department', 'semester'])->orderBy('email')->paginate(25);
+        $items = Student::query()->with(['college', 'department', 'semester'])->orderBy('email')->get();
 
         return view('admin.students.index', compact('items'));
     }

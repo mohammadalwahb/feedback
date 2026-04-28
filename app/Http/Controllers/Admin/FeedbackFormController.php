@@ -24,7 +24,7 @@ class FeedbackFormController extends Controller
 
     public function index(): View
     {
-        $items = FeedbackForm::query()->orderByDesc('id')->paginate(20);
+        $items = FeedbackForm::query()->orderByDesc('id')->get();
 
         return view('admin.feedback.forms.index', compact('items'));
     }

@@ -18,7 +18,7 @@ class AdminUserController extends Controller
 
     public function index(): View
     {
-        $items = Admin::query()->orderBy('email')->paginate(25);
+        $items = Admin::query()->orderBy('email')->get();
 
         return view('admin.admins.index', compact('items'));
     }
