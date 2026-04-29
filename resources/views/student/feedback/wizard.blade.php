@@ -30,11 +30,14 @@
                     ->filter(fn ($x) => filled($x))
                     ->unique()
                     ->values();
-                $form = $version->form;
-                $descriptions = collect([$form?->description_en, $form?->description_ku, $form?->description_ar])
-                    ->filter(fn ($x) => filled($x))
-                    ->unique()
+                $normalizedLabels = $questionLabels
+                    ->map(fn ($x) => mb_strtolower(trim((string) $x)))
                     ->values();
+                $isNoteLikeQuestion = $question->type->value === 'note'
+                    || $normalizedLabels->contains(fn ($x) => str_contains($x, 'optional comment'))
+                    || $normalizedLabels->contains(fn ($x) => str_contains($x, 'note'))
+                    || $normalizedLabels->contains(fn ($x) => str_contains($x, 'ملاحظة'))
+                    || $normalizedLabels->contains(fn ($x) => str_contains($x, 'تێبینی'));
             @endphp
             <h1 class="mx-auto max-w-2xl text-2xl font-bold leading-snug tracking-tight text-slate-900 md:text-3xl">
                 @foreach($questionLabels as $label)
@@ -44,14 +47,7 @@
                     <span class="ml-1 align-super text-rose-500" title="{{ __('validation.required') }}">*</span>
                 @endif
             </h1>
-            @if($descriptions->isNotEmpty())
-                <div class="mt-4 space-y-1 text-sm text-slate-600">
-                    @foreach($descriptions as $desc)
-                        <p>{{ $desc }}</p>
-                    @endforeach
-                </div>
-            @endif
-            @if($question->type->value === 'likert_5')
+            @if($question->type->value === 'likert_5' && ! $isNoteLikeQuestion)
                 <p class="mt-3 flex items-center justify-center gap-2 text-sm text-slate-500">
                     <svg class="h-4 w-4 shrink-0 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -88,8 +84,20 @@
                     </div>
 
                     <div class="flex flex-col items-center">
-                        @switch($question->type->value)
-                            @case('likert_5')
+                        @switch(true)
+                            @case($isNoteLikeQuestion)
+                                <div class="w-full max-w-xl">
+                                    <label class="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-slate-600">
+                                        <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                        </svg>
+                                        {{ __('student.optional_comment') }}
+                                    </label>
+                                    <textarea name="per_staff[{{ $sid }}]" rows="4" class="mx-auto block w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-inner transition-colors placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" placeholder="{{ __('student.optional_comment') }}">{{ is_array($raw) ? ($raw['t'] ?? '') : '' }}</textarea>
+                                </div>
+                                @break
+
+                            @case($question->type->value === 'likert_5')
                                 <div class="flex flex-wrap justify-center gap-4 md:gap-5">
                                     @for($i = 1; $i <= 5; $i++)
                                         <label class="group flex min-w-[4.5rem] cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-2 border-slate-200 bg-slate-50/50 px-5 py-5 transition-all duration-200 hover:border-indigo-300 hover:bg-white hover:shadow-md has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 has-[:checked]:shadow-lg has-[:checked]:shadow-indigo-200/50">
@@ -100,7 +108,7 @@
                                 </div>
                                 @break
 
-                            @case('yes_no')
+                            @case($question->type->value === 'yes_no')
                                 <div class="flex w-full max-w-md flex-wrap justify-center gap-5 sm:gap-6">
                                     <label class="group flex min-h-[120px] min-w-[140px] flex-1 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-slate-200 bg-white px-6 py-5 transition-all duration-200 hover:border-emerald-400/80 hover:shadow-md has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50 has-[:checked]:shadow-lg has-[:checked]:shadow-emerald-200/40">
                                         <input class="sr-only" type="radio" name="per_staff[{{ $sid }}]" value="1" @checked($val === true || $val === '1' || $val === 1) @if($question->is_required) required @endif>
@@ -123,7 +131,7 @@
                                 </div>
                                 @break
 
-                            @case('multiple_choice')
+                            @case($question->type->value === 'multiple_choice')
                                 <div class="flex w-full max-w-lg flex-col items-stretch gap-4">
                                     @foreach(($question->options['choices'] ?? []) as $chIdx => $ch)
                                         @php $choiceLabel = $ch[app()->getLocale()] ?? $ch['en'] ?? $ch['key']; @endphp
@@ -140,8 +148,8 @@
                                 </div>
                                 @break
 
-                            @case('text')
-                            @case('note')
+                            @case($question->type->value === 'text')
+                            @case($question->type->value === 'note')
                                 <div class="w-full max-w-xl">
                                     <label class="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-slate-600">
                                         <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
