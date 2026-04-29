@@ -128,7 +128,7 @@ class StudentFeedbackService
             FeedbackQuestionType::Likert5 => $this->normalizeLikert($payload),
             FeedbackQuestionType::YesNo => $this->normalizeYesNo($payload),
             FeedbackQuestionType::MultipleChoice => $this->normalizeMc($question, $payload),
-            FeedbackQuestionType::Text => $this->normalizeText($payload),
+            FeedbackQuestionType::Text, FeedbackQuestionType::Note => $this->normalizeText($payload),
         };
     }
 

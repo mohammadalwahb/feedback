@@ -24,6 +24,26 @@
                 </p>
             </div>
         @else
+            @php
+                $form = $version->form;
+                $titles = collect([$form?->title_en, $form?->title_ku, $form?->title_ar])->filter(fn ($x) => filled($x))->unique()->values();
+                $descriptions = collect([$form?->description_en, $form?->description_ku, $form?->description_ar])->filter(fn ($x) => filled($x))->unique()->values();
+            @endphp
+            <div class="mx-auto mb-8 w-full max-w-2xl rounded-2xl border border-slate-200 bg-white/95 p-5 shadow-sm">
+                <h2 class="text-lg font-semibold text-slate-900">{{ __('nav.feedback_forms') }}</h2>
+                <div class="mt-3 space-y-1 text-sm text-slate-700">
+                    @foreach($titles as $title)
+                        <p>{{ $title }}</p>
+                    @endforeach
+                </div>
+                @if($descriptions->isNotEmpty())
+                    <div class="mt-4 border-t border-slate-100 pt-3 space-y-1 text-sm text-slate-600">
+                        @foreach($descriptions as $desc)
+                            <p>{{ $desc }}</p>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
             <div class="mx-auto mb-8 flex max-w-xl flex-col items-center gap-2 rounded-2xl border border-indigo-100 bg-indigo-50/80 px-5 py-4 text-center shadow-sm">
                 <p class="flex items-center gap-2 text-sm font-medium text-indigo-900">
                     <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

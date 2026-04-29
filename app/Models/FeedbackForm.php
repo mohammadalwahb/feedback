@@ -15,6 +15,9 @@ class FeedbackForm extends Model
         'title_en',
         'title_ku',
         'title_ar',
+        'description_en',
+        'description_ku',
+        'description_ar',
         'status',
     ];
 
@@ -40,6 +43,18 @@ class FeedbackForm extends Model
         };
 
         return $this->{$key} ?? $this->title_en;
+    }
+
+    public function localizedDescription(?string $locale = null): ?string
+    {
+        $locale ??= app()->getLocale();
+        $key = match ($locale) {
+            'ku' => 'description_ku',
+            'ar' => 'description_ar',
+            default => 'description_en',
+        };
+
+        return $this->{$key} ?: $this->description_en;
     }
 
     public function currentSubmissionVersion(): ?FeedbackFormVersion

@@ -8,6 +8,18 @@
             <label class="block text-sm font-medium text-slate-700">{{ __('fields.title_en') }}</label>
             <input name="title_en" required class="admin-input" placeholder="e.g. Fall 2026 evaluation">
         </div>
+        <div class="min-w-[200px] grow">
+            <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_en') }}</label>
+            <textarea name="description_en" rows="2" class="admin-input"></textarea>
+        </div>
+        <div class="min-w-[200px] grow">
+            <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_ku') }}</label>
+            <textarea name="description_ku" rows="2" class="admin-input"></textarea>
+        </div>
+        <div class="min-w-[200px] grow">
+            <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_ar') }}</label>
+            <textarea name="description_ar" rows="2" class="admin-input"></textarea>
+        </div>
         <button type="submit" class="admin-btn-primary shrink-0">{{ __('admin.add') }}</button>
     </form>
     <div class="overflow-x-auto admin-card">

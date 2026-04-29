@@ -71,6 +71,12 @@
                                     }
                                 }
                             @endphp
+                            @php
+                                $questionLabels = collect([$q->label_en, $q->label_ku, $q->label_ar])
+                                    ->filter(fn ($x) => filled($x))
+                                    ->unique()
+                                    ->values();
+                            @endphp
                             <li class="rounded-2xl border border-slate-100 bg-slate-50/60 px-4 py-4 text-center md:px-5 md:text-left">
                                 <div class="mb-2 flex flex-col items-center gap-1 md:flex-row md:items-center md:gap-2">
                                     <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-violet-600">
@@ -80,7 +86,11 @@
                                         {{ __('student.review_question') }}
                                     </span>
                                 </div>
-                                <p class="text-sm font-medium text-slate-800">{{ $q->localizedLabel() }}</p>
+                                <div class="space-y-1 text-sm font-medium text-slate-800">
+                                    @foreach($questionLabels as $label)
+                                        <p>{{ $label }}</p>
+                                    @endforeach
+                                </div>
                                 <div class="mt-3 flex items-center justify-center gap-2 border-t border-slate-200/80 pt-3 md:justify-start">
                                     <svg class="h-4 w-4 shrink-0 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />

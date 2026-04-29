@@ -20,6 +20,9 @@
         <div><label class="text-sm font-medium text-slate-700">{{ __('fields.title_en') }}</label><input name="title_en" value="{{ old('title_en', $form->title_en) }}" required class="admin-input"></div>
         <div><label class="text-sm font-medium text-slate-700">{{ __('fields.title_ku') }}</label><input name="title_ku" value="{{ old('title_ku', $form->title_ku) }}" class="admin-input"></div>
         <div><label class="text-sm font-medium text-slate-700">{{ __('fields.title_ar') }}</label><input name="title_ar" value="{{ old('title_ar', $form->title_ar) }}" class="admin-input"></div>
+        <div><label class="text-sm font-medium text-slate-700">{{ __('fields.description_en') }}</label><textarea name="description_en" rows="3" class="admin-input">{{ old('description_en', $form->description_en) }}</textarea></div>
+        <div><label class="text-sm font-medium text-slate-700">{{ __('fields.description_ku') }}</label><textarea name="description_ku" rows="3" class="admin-input">{{ old('description_ku', $form->description_ku) }}</textarea></div>
+        <div><label class="text-sm font-medium text-slate-700">{{ __('fields.description_ar') }}</label><textarea name="description_ar" rows="3" class="admin-input">{{ old('description_ar', $form->description_ar) }}</textarea></div>
         <div>
             <label class="text-sm font-medium text-slate-700">Lifecycle</label>
             <select name="status" class="admin-input">
@@ -75,6 +78,7 @@
                     <option value="yes_no">Yes / No</option>
                     <option value="multiple_choice">Multiple choice</option>
                     <option value="text">Text</option>
+                    <option value="note">Note</option>
                 </select>
                 <input name="label_en" placeholder="Label EN" required class="admin-input">
                 <input name="label_ku" placeholder="Label KU" class="admin-input">

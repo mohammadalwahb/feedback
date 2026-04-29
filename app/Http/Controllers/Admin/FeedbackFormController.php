@@ -37,8 +37,19 @@ class FeedbackFormController extends Controller
             'title_en' => ['required', 'string', 'max:255'],
             'title_ku' => ['nullable', 'string', 'max:255'],
             'title_ar' => ['nullable', 'string', 'max:255'],
+            'description_en' => ['nullable', 'string'],
+            'description_ku' => ['nullable', 'string'],
+            'description_ar' => ['nullable', 'string'],
         ]);
-        $form = $this->forms->createForm($data['title_en'], $data['title_ku'] ?? null, $data['title_ar'] ?? null, $request->user());
+        $form = $this->forms->createForm(
+            $data['title_en'],
+            $data['title_ku'] ?? null,
+            $data['title_ar'] ?? null,
+            $data['description_en'] ?? null,
+            $data['description_ku'] ?? null,
+            $data['description_ar'] ?? null,
+            $request->user()
+        );
 
         return redirect()->route('admin.feedback.forms.edit', $form)->with('ok', __('messages.saved'));
     }
@@ -62,6 +73,9 @@ class FeedbackFormController extends Controller
             'title_en' => ['required', 'string', 'max:255'],
             'title_ku' => ['nullable', 'string', 'max:255'],
             'title_ar' => ['nullable', 'string', 'max:255'],
+            'description_en' => ['nullable', 'string'],
+            'description_ku' => ['nullable', 'string'],
+            'description_ar' => ['nullable', 'string'],
             'status' => ['required', Rule::enum(FeedbackFormStatus::class)],
         ]);
         $oldStatus = $form->status;
@@ -69,6 +83,9 @@ class FeedbackFormController extends Controller
             'title_en' => $data['title_en'],
             'title_ku' => $data['title_ku'],
             'title_ar' => $data['title_ar'],
+            'description_en' => $data['description_en'] ?? null,
+            'description_ku' => $data['description_ku'] ?? null,
+            'description_ar' => $data['description_ar'] ?? null,
             'status' => $data['status'],
         ]);
         $form->save();

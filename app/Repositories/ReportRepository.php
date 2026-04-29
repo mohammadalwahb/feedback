@@ -501,7 +501,7 @@ class ReportRepository
                 return null;
             })->filter(fn ($x) => $x !== null)->values(),
             FeedbackQuestionType::MultipleChoice => $this->multipleChoiceScores($question, $answers),
-            FeedbackQuestionType::Text => collect(),
+            FeedbackQuestionType::Text, FeedbackQuestionType::Note => collect(),
         };
     }
 

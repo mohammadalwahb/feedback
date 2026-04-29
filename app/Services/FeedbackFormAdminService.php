@@ -17,12 +17,23 @@ class FeedbackFormAdminService
         protected AuditLogger $auditLogger
     ) {}
 
-    public function createForm(string $titleEn, ?string $titleKu, ?string $titleAr, \App\Models\User $admin): FeedbackForm
+    public function createForm(
+        string $titleEn,
+        ?string $titleKu,
+        ?string $titleAr,
+        ?string $descriptionEn,
+        ?string $descriptionKu,
+        ?string $descriptionAr,
+        \App\Models\User $admin
+    ): FeedbackForm
     {
         $form = FeedbackForm::query()->create([
             'title_en' => $titleEn,
             'title_ku' => $titleKu,
             'title_ar' => $titleAr,
+            'description_en' => $descriptionEn,
+            'description_ku' => $descriptionKu,
+            'description_ar' => $descriptionAr,
             'status' => FeedbackFormStatus::Draft,
         ]);
 

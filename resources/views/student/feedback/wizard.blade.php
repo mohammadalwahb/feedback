@@ -24,12 +24,32 @@
 
         {{-- Question --}}
         <div class="mb-10 text-center md:mb-12">
+            @php
+                $questionLabels = collect([$question->label_en, $question->label_ku, $question->label_ar])
+                    ->filter(fn ($x) => filled($x))
+                    ->unique()
+                    ->values();
+                $form = $version->form;
+                $descriptions = collect([$form?->description_en, $form?->description_ku, $form?->description_ar])
+                    ->filter(fn ($x) => filled($x))
+                    ->unique()
+                    ->values();
+            @endphp
             <h1 class="mx-auto max-w-2xl text-2xl font-bold leading-snug tracking-tight text-slate-900 md:text-3xl">
-                {{ $question->localizedLabel() }}
+                @foreach($questionLabels as $label)
+                    <div>{{ $label }}</div>
+                @endforeach
                 @if($question->is_required)
                     <span class="ml-1 align-super text-rose-500" title="{{ __('validation.required') }}">*</span>
                 @endif
             </h1>
+            @if($descriptions->isNotEmpty())
+                <div class="mt-4 space-y-1 text-sm text-slate-600">
+                    @foreach($descriptions as $desc)
+                        <p>{{ $desc }}</p>
+                    @endforeach
+                </div>
+            @endif
             @if($question->type->value === 'likert_5')
                 <p class="mt-3 flex items-center justify-center gap-2 text-sm text-slate-500">
                     <svg class="h-4 w-4 shrink-0 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

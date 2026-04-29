@@ -8,4 +8,5 @@ enum FeedbackQuestionType: string
     case YesNo = 'yes_no';
     case MultipleChoice = 'multiple_choice';
     case Text = 'text';
+    case Note = 'note';
 }
