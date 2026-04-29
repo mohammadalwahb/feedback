@@ -18,4 +18,6 @@ return [
     'review_question' => 'پرسیار',
     'selected' => 'هەڵبژاردراو',
     'progress_short' => 'پێشڕەوت',
+    'staff_to_evaluate' => 'مامۆستای پێویست بۆ هەڵسەنگاندن',
+    'staff_evaluated' => 'مامۆستای هەڵسەنگێندراو',
 ];

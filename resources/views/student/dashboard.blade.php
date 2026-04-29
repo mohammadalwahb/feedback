@@ -28,6 +28,16 @@
                 </span>
             </div>
             <p class="text-sm font-medium leading-relaxed text-indigo-950">{{ __('student.progress', ['done' => $progress['completed'], 'total' => $progress['total']]) }}</p>
+            <div class="mt-5 grid gap-3 text-start sm:grid-cols-2">
+                <div class="rounded-2xl border border-indigo-100 bg-indigo-50/60 px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-indigo-700">{{ __('student.staff_to_evaluate') }}</p>
+                    <p class="mt-1 text-2xl font-bold tabular-nums text-indigo-900">{{ $progress['total'] }}</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-700">{{ __('student.staff_evaluated') }}</p>
+                    <p class="mt-1 text-2xl font-bold tabular-nums text-emerald-900">{{ $progress['completed'] }}</p>
+                </div>
+            </div>
             @if($version)
                 <p class="mt-4 flex items-start justify-center gap-2 text-sm text-indigo-800/90">
                     <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

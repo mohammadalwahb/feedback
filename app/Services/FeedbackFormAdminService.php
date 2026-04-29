@@ -8,6 +8,7 @@ use App\Models\FeedbackForm;
 use App\Models\FeedbackFormVersion;
 use App\Models\FeedbackQuestion;
 use App\Models\FeedbackResponseDraft;
+use App\Models\FeedbackSubmission;
 use Illuminate\Support\Facades\DB;
 
 class FeedbackFormAdminService
@@ -163,6 +164,30 @@ class FeedbackFormAdminService
             }
             $form->delete();
             $this->auditLogger->log($admin, 'feedback_form.deleted', $form);
+        });
+    }
+
+    public function deleteFormResponses(FeedbackForm $form, \App\Models\User $admin): int
+    {
+        return DB::transaction(function () use ($form, $admin) {
+            $versionIds = $form->versions()->pluck('id');
+            if ($versionIds->isEmpty()) {
+                return 0;
+            }
+
+            FeedbackResponseDraft::query()
+                ->whereIn('feedback_form_version_id', $versionIds)
+                ->delete();
+
+            $deleted = FeedbackSubmission::query()
+                ->whereIn('feedback_form_version_id', $versionIds)
+                ->delete();
+
+            $this->auditLogger->log($admin, 'feedback_form.responses_deleted', $form, [
+                'deleted_submissions' => $deleted,
+            ]);
+
+            return (int) $deleted;
         });
     }
 }

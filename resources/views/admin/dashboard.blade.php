@@ -39,6 +39,23 @@
         </div>
     </div>
 
+    <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <div class="admin-stat-tile">
+            <p class="flex items-center gap-2 text-sm font-medium text-slate-500">
+                <svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a6 6 0 100 12 6 6 0 000-12zm0-3a9 9 0 100 18 9 9 0 000-18z" /></svg>
+                {{ __('reports.staff_to_evaluate') }}
+            </p>
+            <p class="mt-3 text-3xl font-bold tabular-nums text-indigo-700">{{ $staffProgress['total'] }}</p>
+        </div>
+        <div class="admin-stat-tile">
+            <p class="flex items-center gap-2 text-sm font-medium text-slate-500">
+                <svg class="h-5 w-5 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m6 2.25a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                {{ __('reports.staff_evaluated') }}
+            </p>
+            <p class="mt-3 text-3xl font-bold tabular-nums text-emerald-700">{{ $staffProgress['evaluated'] }}</p>
+        </div>
+    </div>
+
     <div class="mt-10 flex flex-wrap items-center gap-4">
         <a href="{{ route('admin.reports.participation') }}" class="admin-btn-primary">
             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>

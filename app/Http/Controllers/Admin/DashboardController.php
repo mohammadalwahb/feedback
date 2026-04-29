@@ -15,7 +15,8 @@ class DashboardController extends Controller
     public function __invoke(): View
     {
         $participation = $this->reports->participationRatio();
+        $staffProgress = $this->reports->staffEvaluationProgress();
 
-        return view('admin.dashboard', compact('participation'));
+        return view('admin.dashboard', compact('participation', 'staffProgress'));
     }
 }

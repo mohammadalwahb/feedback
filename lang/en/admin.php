@@ -17,4 +17,9 @@ return [
     'delete_all_confirmation_invalid' => 'You must type the exact phrase DELETE ALL to confirm.',
     'export_colleges_excel' => 'Download colleges (Excel)',
     'export_departments_excel' => 'Download departments (Excel)',
+    'delete_form_responses' => 'Delete all responses',
+    'delete_form_responses_prompt' => 'Type DELETE RESPONSES to permanently delete all submissions for this form.',
+    'delete_form_responses_confirmation_invalid' => 'You must type the exact phrase DELETE RESPONSES to confirm.',
+    'delete_form_responses_done' => 'Deleted :count submission(s) for this form.',
 ];
+

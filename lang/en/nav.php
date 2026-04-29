@@ -13,9 +13,11 @@ return [
     'feedback_forms' => 'Feedback forms',
     'reports' => 'Reports',
     'results' => 'Results',
+    'realtime_statistics' => 'Realtime statistics',
     'audit' => 'Audit log',
     'logout' => 'Sign out',
     'login_google' => 'Continue with Google',
     'student_portal' => 'Student portal',
     'language' => 'Language',
 ];
+

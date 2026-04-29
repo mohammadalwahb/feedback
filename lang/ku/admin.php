@@ -17,4 +17,9 @@ return [
     'delete_all_confirmation_invalid' => 'دەبێت وشەکە تەواو وەک DELETE ALL بنووسیت.',
     'export_colleges_excel' => 'داگرتنی کۆلێژەکان (Excel)',
     'export_departments_excel' => 'داگرتنی بەشەکان (Excel)',
+    'delete_form_responses' => 'سڕینەوەی هەموو وەڵامەکان',
+    'delete_form_responses_prompt' => 'DELETE RESPONSES بنووسە بۆ سڕینەوەی هەموو ناردنەکانی ئەم فۆرمە بە شێوەی کۆتایی.',
+    'delete_form_responses_confirmation_invalid' => 'دەبێت وشەکە تەواو وەک DELETE RESPONSES بنووسیت.',
+    'delete_form_responses_done' => ':count ناردن/هەڵسەنگاندن بۆ ئەم فۆرمە سڕایەوە.',
 ];
+

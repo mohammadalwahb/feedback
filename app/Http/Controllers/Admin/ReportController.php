@@ -180,6 +180,57 @@ class ReportController extends Controller
         }, 'evaluation-results-v'.$versionId.'.xlsx');
     }
 
+    public function realtimeStatistics(): View
+    {
+        $rows = $this->reports->realtimeStatisticsRows();
+
+        return view('admin.reports.realtime', compact('rows'));
+    }
+
+    public function exportRealtimeStatisticsExcel(): StreamedResponse
+    {
+        $rows = $this->reports->realtimeStatisticsRows();
+        $spreadsheet = new Spreadsheet;
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $headers = [
+            __('reports.excel_staff'),
+            __('reports.excel_subject'),
+            __('reports.excel_college'),
+            __('reports.excel_department'),
+            __('reports.excel_semester'),
+            __('reports.realtime_evaluation_count'),
+            __('reports.realtime_expected_students'),
+        ];
+
+        $colIndex = 1;
+        foreach ($headers as $header) {
+            $sheet->setCellValue(Coordinate::stringFromColumnIndex($colIndex).'1', $header);
+            $colIndex++;
+        }
+
+        $r = 2;
+        foreach ($rows as $row) {
+            $sheet->setCellValue('A'.$r, $row['staff']);
+            $sheet->setCellValue('B'.$r, $row['subject']);
+            $sheet->setCellValue('C'.$r, $row['college'] ?? '');
+            $sheet->setCellValue('D'.$r, $row['department'] ?? '');
+            $sheet->setCellValue('E'.$r, $row['semester'] ?? '');
+            $sheet->setCellValue('F'.$r, $row['evaluation_count']);
+            $sheet->setCellValue('G'.$r, $row['expected_students']);
+            $r++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $tmp = tempnam(sys_get_temp_dir(), 'xlsx');
+        $writer->save($tmp);
+
+        return response()->streamDownload(function () use ($tmp) {
+            readfile($tmp);
+            @unlink($tmp);
+        }, 'realtime-statistics.xlsx');
+    }
+
     public function exportExcel(Request $request): StreamedResponse
     {
         $versionId = (int) $request->get('form_version_id', 0);

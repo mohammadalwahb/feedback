@@ -11,6 +11,7 @@ use App\Models\FeedbackQuestion;
 use App\Models\FeedbackSubmission;
 use App\Models\Semester;
 use App\Models\StaffSubject;
+use App\Models\Student;
 use Illuminate\Support\Collection;
 
 class ReportRepository
@@ -77,6 +78,29 @@ class ReportRepository
         $ratio = $eligible > 0 ? round($submitted / $eligible, 4) : 0.0;
 
         return compact('eligible', 'submitted', 'ratio');
+    }
+
+    /**
+     * @return array{total:int, evaluated:int}
+     */
+    public function staffEvaluationProgress(?int $formVersionId = null): array
+    {
+        $versionId = $formVersionId ?? FeedbackFormVersion::query()
+            ->where('accepts_submissions', true)
+            ->orderByDesc('id')
+            ->value('id');
+
+        $total = (int) StaffSubject::query()->count();
+        if (! $versionId) {
+            return ['total' => $total, 'evaluated' => 0];
+        }
+
+        $evaluated = (int) FeedbackSubmission::query()
+            ->where('feedback_form_version_id', $versionId)
+            ->distinct()
+            ->count('staff_subject_id');
+
+        return ['total' => $total, 'evaluated' => $evaluated];
     }
 
     /**
@@ -259,6 +283,58 @@ class ReportRepository
     }
 
     /**
+     * @return list<array{
+     *   staff:string,
+     *   subject:string,
+     *   college:?string,
+     *   department:?string,
+     *   semester:?string,
+     *   evaluation_count:int,
+     *   expected_students:int
+     * }>
+     */
+    public function realtimeStatisticsRows(): array
+    {
+        $submissionCounts = FeedbackSubmission::query()
+            ->selectRaw('staff_subject_id, COUNT(*) as aggregate_count')
+            ->groupBy('staff_subject_id')
+            ->pluck('aggregate_count', 'staff_subject_id');
+
+        $studentCountsByContext = Student::query()
+            ->selectRaw('college_id, department_id, semester_id, COUNT(*) as aggregate_count')
+            ->groupBy('college_id', 'department_id', 'semester_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                $key = $row->college_id.'|'.$row->department_id.'|'.$row->semester_id;
+
+                return [$key => (int) $row->aggregate_count];
+            });
+
+        $rows = StaffSubject::query()
+            ->with(['college', 'department', 'semester'])
+            ->orderBy('instructor_name')
+            ->get()
+            ->map(function (StaffSubject $staffSubject) use ($submissionCounts, $studentCountsByContext) {
+                $contextKey = $staffSubject->college_id.'|'.$staffSubject->department_id.'|'.$staffSubject->semester_id;
+
+                return [
+                    'staff' => $staffSubject->instructor_name,
+                    'subject' => $staffSubject->subject_name,
+                    'college' => $staffSubject->college?->name_en,
+                    'department' => $staffSubject->department?->name_en,
+                    'semester' => $staffSubject->semester?->name_en,
+                    'evaluation_count' => (int) ($submissionCounts[$staffSubject->id] ?? 0),
+                    'expected_students' => (int) ($studentCountsByContext[$contextKey] ?? 0),
+                ];
+            })
+            ->sortByDesc('evaluation_count')
+            ->values()
+            ->all();
+
+        return $rows;
+    }
+
+    /**
      * Per staff member: combines all taught subjects into one result row.
      * Numeric average per question (Likert 1–5, Yes/No as 5/1, MC spread on 1–5, text omitted),
      * then overall = mean of those question averages (only questions with a computed average).
@@ -304,7 +380,7 @@ class ReportRepository
         $staffGroups = $q
             ->orderBy('instructor_name')
             ->get()
-            ->groupBy(fn (StaffSubject $staffSubject) => $staffSubject->staff_employee_id.'|'.$staffSubject->instructor_name);
+            ->groupBy(fn (StaffSubject $staffSubject) => $this->staffGroupingKey($staffSubject));
 
         foreach ($staffGroups as $groupKey => $staffSubjects) {
             /** @var StaffSubject $first */
@@ -321,7 +397,7 @@ class ReportRepository
             $submissionCount = $subs->count();
 
             $perQuestion = [];
-            $averagesForOverall = [];
+            $scoresForOverall = [];
 
             foreach ($questions as $question) {
                 $answers = FeedbackAnswer::query()
@@ -329,7 +405,8 @@ class ReportRepository
                     ->whereIn('feedback_submission_id', $subs)
                     ->pluck('value');
 
-                $avg = $this->numericAverageForQuestion($question, $answers);
+                $scores = $this->numericScoresForQuestion($question, $answers);
+                $avg = $scores->isEmpty() ? null : round((float) $scores->avg(), 2);
                 $perQuestion[] = [
                     'question_id' => $question->id,
                     'label' => $question->localizedLabel($locale),
@@ -337,13 +414,13 @@ class ReportRepository
                     'average' => $avg,
                     'response_count' => $answers->count(),
                 ];
-                if ($avg !== null) {
-                    $averagesForOverall[] = $avg;
+                if ($scores->isNotEmpty()) {
+                    $scoresForOverall = array_merge($scoresForOverall, $scores->all());
                 }
             }
 
-            $overall = count($averagesForOverall) > 0
-                ? round(array_sum($averagesForOverall) / count($averagesForOverall), 2)
+            $overall = count($scoresForOverall) > 0
+                ? round(array_sum($scoresForOverall) / count($scoresForOverall), 2)
                 : null;
 
             $subjects = $staffSubjects->pluck('subject_name')
@@ -388,57 +465,52 @@ class ReportRepository
      */
     protected function numericAverageForQuestion(FeedbackQuestion $question, Collection $answers): ?float
     {
-        if ($answers->isEmpty()) {
-            return null;
-        }
-
-        return match ($question->type) {
-            FeedbackQuestionType::Likert5 => $this->averageLikertAnswers($answers),
-            FeedbackQuestionType::YesNo => $this->averageYesNoAnswers($answers),
-            FeedbackQuestionType::MultipleChoice => $this->averageMultipleChoiceAnswers($question, $answers),
-            FeedbackQuestionType::Text => null,
-        };
-    }
-
-    protected function averageLikertAnswers(Collection $answers): ?float
-    {
-        $nums = $answers
-            ->map(fn ($v) => (int) ($v['v'] ?? 0))
-            ->filter(fn ($n) => $n >= 1 && $n <= 5);
-
-        return $nums->isEmpty() ? null : round((float) $nums->avg(), 2);
-    }
-
-    protected function averageYesNoAnswers(Collection $answers): ?float
-    {
-        $scores = $answers->map(function ($v) {
-            $raw = $v['v'] ?? null;
-            if ($raw === null || $raw === '') {
-                return null;
-            }
-            if (is_bool($raw)) {
-                return $raw ? 5.0 : 1.0;
-            }
-            $s = strtolower((string) $raw);
-            if (in_array($s, ['yes', '1', 'true'], true)) {
-                return 5.0;
-            }
-            if (in_array($s, ['no', '0', 'false'], true)) {
-                return 1.0;
-            }
-
-            return null;
-        })->filter(fn ($x) => $x !== null);
+        $scores = $this->numericScoresForQuestion($question, $answers);
 
         return $scores->isEmpty() ? null : round((float) $scores->avg(), 2);
     }
 
-    protected function averageMultipleChoiceAnswers(FeedbackQuestion $question, Collection $answers): ?float
+    protected function numericScoresForQuestion(FeedbackQuestion $question, Collection $answers): Collection
+    {
+        if ($answers->isEmpty()) {
+            return collect();
+        }
+
+        return match ($question->type) {
+            FeedbackQuestionType::Likert5 => $answers
+                ->map(fn ($v) => (int) ($v['v'] ?? 0))
+                ->filter(fn ($n) => $n >= 1 && $n <= 5)
+                ->map(fn ($n) => (float) $n)
+                ->values(),
+            FeedbackQuestionType::YesNo => $answers->map(function ($v) {
+                $raw = $v['v'] ?? null;
+                if ($raw === null || $raw === '') {
+                    return null;
+                }
+                if (is_bool($raw)) {
+                    return $raw ? 5.0 : 1.0;
+                }
+                $s = strtolower((string) $raw);
+                if (in_array($s, ['yes', '1', 'true'], true)) {
+                    return 5.0;
+                }
+                if (in_array($s, ['no', '0', 'false'], true)) {
+                    return 1.0;
+                }
+
+                return null;
+            })->filter(fn ($x) => $x !== null)->values(),
+            FeedbackQuestionType::MultipleChoice => $this->multipleChoiceScores($question, $answers),
+            FeedbackQuestionType::Text => collect(),
+        };
+    }
+
+    protected function multipleChoiceScores(FeedbackQuestion $question, Collection $answers): Collection
     {
         $opts = $question->options['choices'] ?? [];
         $keys = collect($opts)->pluck('key')->all();
         if ($keys === []) {
-            return null;
+            return collect();
         }
 
         $n = count($keys);
@@ -455,6 +527,21 @@ class ReportRepository
             return 1.0 + ($idx / ($n - 1)) * 4.0;
         })->filter(fn ($x) => $x !== null);
 
-        return $scores->isEmpty() ? null : round((float) $scores->avg(), 2);
+        return $scores->values();
+    }
+
+    protected function staffGroupingKey(StaffSubject $staffSubject): string
+    {
+        $employeeId = trim((string) $staffSubject->staff_employee_id);
+        if ($employeeId !== '') {
+            return 'emp:'.mb_strtolower($employeeId);
+        }
+
+        $name = preg_replace('/\s+/', ' ', trim((string) $staffSubject->instructor_name)) ?? '';
+        if ($name !== '') {
+            return 'name:'.mb_strtolower($name);
+        }
+
+        return 'row:'.$staffSubject->id;
     }
 }

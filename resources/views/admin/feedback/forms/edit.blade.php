@@ -3,8 +3,17 @@
 @section('content')
     <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-bold tracking-tight text-slate-900">{{ $form->title_en }}</h1>
-        <a href="{{ route('admin.feedback.forms.preview', $form) }}" class="admin-btn-secondary text-sm">{{ __('feedback.preview') }}</a>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('admin.feedback.forms.preview', $form) }}" class="admin-btn-secondary text-sm">{{ __('feedback.preview') }}</a>
+            <button type="button"
+                class="inline-flex items-center gap-1 rounded-2xl border-2 border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-800 shadow-sm transition hover:bg-rose-100"
+                onclick="window.submitDeleteFormResponses('delete-form-responses-form','delete-form-responses-confirmation','DELETE RESPONSES')">{{ __('admin.delete_form_responses') }}</button>
+        </div>
     </div>
+    <form id="delete-form-responses-form" action="{{ route('admin.feedback.forms.responses.delete-all', $form) }}" method="post" class="hidden">
+        @csrf
+        <input type="hidden" name="confirmation" id="delete-form-responses-confirmation" value="">
+    </form>
 
     <form method="post" action="{{ route('admin.feedback.forms.update', $form) }}" class="admin-card mb-8 grid gap-4 p-6 md:grid-cols-2 md:p-8">
         @csrf @method('PUT')
@@ -97,6 +106,15 @@
                     form.submit();
                 });
             });
+            window.submitDeleteFormResponses ??= function (formId, inputId, phrase) {
+                const typed = prompt(@json(__('admin.delete_form_responses_prompt')));
+                if (typed !== phrase) {
+                    if (typed !== null) alert(@json(__('admin.delete_form_responses_confirmation_invalid')));
+                    return;
+                }
+                document.getElementById(inputId).value = typed;
+                document.getElementById(formId).submit();
+            };
         </script>
     @endpush
 @endsection

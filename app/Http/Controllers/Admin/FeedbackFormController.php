@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\FeedbackFormStatus;
 use App\Enums\FeedbackQuestionType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\DeleteFormResponsesRequest;
 use App\Models\FeedbackForm;
 use App\Models\FeedbackFormVersion;
 use App\Models\FeedbackQuestion;
@@ -179,6 +180,15 @@ class FeedbackFormController extends Controller
         $this->forms->deleteForm($form, $request->user());
 
         return redirect()->route('admin.feedback.forms.index')->with('ok', __('messages.deleted'));
+    }
+
+    public function destroyResponses(DeleteFormResponsesRequest $request, FeedbackForm $form): RedirectResponse
+    {
+        Gate::authorize('delete', $form);
+        $deleted = $this->forms->deleteFormResponses($form, $request->user());
+
+        return redirect()->route('admin.feedback.forms.edit', $form)
+            ->with('ok', __('admin.delete_form_responses_done', ['count' => $deleted]));
     }
 
     protected function prepareQuestionRequest(Request $request): void

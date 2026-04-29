@@ -117,6 +117,14 @@
         </a>
         <a @class([
             'inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium transition',
+            'bg-indigo-100 text-indigo-900 shadow-sm' => request()->routeIs('admin.reports.realtime*'),
+            'text-indigo-900 hover:bg-white/80 hover:shadow-sm' => ! request()->routeIs('admin.reports.realtime*'),
+        ]) href="{{ route('admin.reports.realtime') }}">
+            <svg class="h-4 w-4 shrink-0 text-violet-600 opacity-80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7.5 14.25l3-3 2.25 2.25L16.5 9" /></svg>
+            {{ __('nav.realtime_statistics') }}
+        </a>
+        <a @class([
+            'inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium transition',
             'bg-indigo-100 text-indigo-900 shadow-sm' => request()->routeIs('admin.audit.*'),
             'text-indigo-900 hover:bg-white/80 hover:shadow-sm' => ! request()->routeIs('admin.audit.*'),
         ]) href="{{ route('admin.audit.index') }}">
@@ -125,3 +133,4 @@
         </a>
     </div>
 </nav>
+

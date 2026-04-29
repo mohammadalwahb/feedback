@@ -67,6 +67,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('feedback/forms/{form}/edit', [FeedbackFormController::class, 'edit'])->name('feedback.forms.edit');
     Route::put('feedback/forms/{form}', [FeedbackFormController::class, 'update'])->name('feedback.forms.update');
     Route::delete('feedback/forms/{form}', [FeedbackFormController::class, 'destroy'])->name('feedback.forms.destroy');
+    Route::post('feedback/forms/{form}/responses/delete-all', [FeedbackFormController::class, 'destroyResponses'])->name('feedback.forms.responses.delete-all');
     Route::post('feedback/forms/{form}/versions', [FeedbackFormController::class, 'publishVersion'])->name('feedback.forms.versions.publish');
     Route::put('feedback/forms/{form}/versions/{version}', [FeedbackFormController::class, 'updateVersion'])->name('feedback.forms.versions.update');
     Route::post('feedback/forms/{form}/versions/{version}/questions', [FeedbackFormController::class, 'storeQuestion'])->name('feedback.forms.questions.store');
@@ -80,6 +81,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('reports/special', [ReportController::class, 'special'])->name('reports.special');
     Route::get('reports/results', [ReportController::class, 'results'])->name('reports.results');
     Route::get('reports/results/export-excel', [ReportController::class, 'exportResultsExcel'])->name('reports.results.export.excel');
+    Route::get('reports/realtime-statistics', [ReportController::class, 'realtimeStatistics'])->name('reports.realtime');
+    Route::get('reports/realtime-statistics/export-excel', [ReportController::class, 'exportRealtimeStatisticsExcel'])->name('reports.realtime.export.excel');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');

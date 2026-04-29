@@ -13,9 +13,11 @@ return [
     'feedback_forms' => 'فۆرمەکان',
     'reports' => 'راپۆرت',
     'results' => 'ئەنجامەکان',
+    'realtime_statistics' => 'ئامارەکانی ڕاستەوخۆ',
     'audit' => 'تۆمار',
     'logout' => 'دەرچوون',
     'login_google' => 'چوونەژوورەوە لەگەڵ گووگڵ',
     'student_portal' => 'پۆرتالی قوتابی',
     'language' => 'زمان',
 ];
+

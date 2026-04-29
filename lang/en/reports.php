@@ -16,6 +16,9 @@ return [
     'dept_avg' => 'Department Likert average (comparison)',
     'results_title' => 'Evaluation results by staff & subject',
     'results_intro' => 'Each numeric question has an average across submissions. The overall score is the mean of those question averages (Likert 1–5, Yes/No as 1/5, multiple choice spread on 1–5; text questions are omitted).',
+    'realtime_intro' => 'Live subject-level progress sorted by number of received evaluations.',
+    'realtime_evaluation_count' => 'Evaluations received',
+    'realtime_expected_students' => 'Students expected to evaluate',
     'apply_filter' => 'Apply filter',
     'export_results_excel' => 'Export Excel',
     'results_empty' => 'No staff rows match these filters.',
@@ -26,6 +29,8 @@ return [
     'col_semester' => 'Semester',
     'col_submissions' => 'Submissions',
     'col_overall' => 'Overall avg',
+    'staff_to_evaluate' => 'Staff to evaluate',
+    'staff_evaluated' => 'Staff evaluated',
     'excel_staff' => 'Staff',
     'excel_subject' => 'Subject',
     'excel_college' => 'College',
@@ -34,3 +39,4 @@ return [
     'excel_submissions' => 'Submissions',
     'excel_overall_avg' => 'Overall average',
 ];
+

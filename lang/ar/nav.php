@@ -13,9 +13,11 @@ return [
     'feedback_forms' => 'نماذج التقييم',
     'reports' => 'التقارير',
     'results' => 'النتائج',
+    'realtime_statistics' => 'إحصاءات لحظية',
     'audit' => 'سجل التدقيق',
     'logout' => 'تسجيل الخروج',
     'login_google' => 'المتابعة مع Google',
     'student_portal' => 'بوابة الطالب',
     'language' => 'اللغة',
 ];
+

@@ -16,6 +16,9 @@ return [
     'dept_avg' => 'متوسط القسم',
     'results_title' => 'نتائج التقييم لكل عضو تدريس ومادة',
     'results_intro' => 'يُحسب متوسط لكل سؤال قابل للقياس الرقمي. المتوسط العام هو متوسط تلك المتوسطات (ليكرت 1–5، نعم/لا كـ 1 و5، الاختيار من متعدد موزّع على 1–5؛ أسئلة نصية تُستبعد).',
+    'realtime_intro' => 'تقدم لحظي على مستوى المادة مرتب حسب عدد التقييمات المستلمة.',
+    'realtime_evaluation_count' => 'عدد التقييمات المستلمة',
+    'realtime_expected_students' => 'عدد الطلاب المتوقع تقييمهم',
     'apply_filter' => 'تطبيق التصفية',
     'export_results_excel' => 'تصدير Excel',
     'results_empty' => 'لا توجد صفوف تطابق التصفية.',
@@ -26,6 +29,8 @@ return [
     'col_semester' => 'الفصل',
     'col_submissions' => 'الإجابات',
     'col_overall' => 'المتوسط العام',
+    'staff_to_evaluate' => 'أعضاء التدريس المطلوب تقييمهم',
+    'staff_evaluated' => 'أعضاء التدريس الذين تم تقييمهم',
     'excel_staff' => 'عضو التدريس',
     'excel_subject' => 'المادة',
     'excel_college' => 'الكلية',
@@ -34,3 +39,4 @@ return [
     'excel_submissions' => 'الإجابات',
     'excel_overall_avg' => 'المتوسط العام',
 ];
+

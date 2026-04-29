@@ -18,4 +18,6 @@ return [
     'review_question' => 'Question',
     'selected' => 'Selected',
     'progress_short' => 'Your progress',
+    'staff_to_evaluate' => 'Staff to evaluate',
+    'staff_evaluated' => 'Staff evaluated',
 ];
