@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id' => 'ID',
     'title_en' => 'Title (EN)',
     'title_ku' => 'Title (KU)',
     'title_ar' => 'Title (AR)',
@@ -9,6 +10,9 @@ return [
     'name_ar' => 'Name (AR)',
     'email' => 'Email',
     'college' => 'College',
+    'college_name_en' => 'College name (EN)',
+    'college_name_ku' => 'College name (KU)',
+    'college_name_ar' => 'College name (AR)',
     'department' => 'Department',
     'semester' => 'Semester',
     'english_name' => 'English name',

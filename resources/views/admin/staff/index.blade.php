@@ -17,14 +17,15 @@
     <div class="overflow-x-auto admin-card">
         <table class="w-full text-left text-sm" id="tbl">
             <thead class="admin-table-head">
-                <tr><th class="p-3">{{ __('fields.instructor') }}</th><th class="p-3">{{ __('fields.subject') }}</th><th class="p-3">{{ __('fields.college') }}</th><th class="p-3"></th></tr>
+                <tr><th class="p-3">{{ __('fields.instructor') }}</th><th class="p-3">{{ __('fields.subject') }}</th><th class="p-3">{{ __('fields.college') }}</th><th class="p-3">{{ __('fields.department') }}</th><th class="p-3"></th></tr>
             </thead>
             <tbody>
                 @foreach($items as $s)
                     <tr class="border-b">
                         <td class="p-3">{{ $s->instructor_name }} <span class="text-slate-400">#{{ $s->staff_employee_id }}</span></td>
                         <td class="p-3">{{ $s->subject_name }}</td>
-                        <td class="p-3">{{ $s->college?->name_en }}</td>
+                        <td class="p-3">{{ $s->college?->name_en ?? '—' }}</td>
+                        <td class="p-3">{{ $s->department?->name_en ?? '—' }}</td>
                         <td class="p-3 text-right">
                             <a href="{{ route('admin.staff.edit', $s) }}" class="text-indigo-600">{{ __('admin.edit') }}</a>
                             <form action="{{ route('admin.staff.destroy', $s) }}" method="post" class="inline" onsubmit="return confirm('{{ __('admin.confirm_delete') }}')">@csrf @method('DELETE')

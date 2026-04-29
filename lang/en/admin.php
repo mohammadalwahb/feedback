@@ -15,4 +15,6 @@ return [
     'delete_all_staff_done' => 'Moved :count staff record(s) to trash.',
     'delete_all_confirmation_field' => 'confirmation',
     'delete_all_confirmation_invalid' => 'You must type the exact phrase DELETE ALL to confirm.',
+    'export_colleges_excel' => 'Download colleges (Excel)',
+    'export_departments_excel' => 'Download departments (Excel)',
 ];

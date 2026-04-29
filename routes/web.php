@@ -33,9 +33,11 @@ Route::post('/logout', [GoogleAuthController::class, 'logout'])->middleware('aut
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', AdminDashboardController::class)->name('dashboard');
 
+    Route::get('colleges/export-excel', [CollegeController::class, 'exportExcel'])->name('colleges.export.excel');
     Route::resource('colleges', CollegeController::class)->except(['show']);
     Route::post('colleges/{id}/restore', [CollegeController::class, 'restore'])->name('colleges.restore');
 
+    Route::get('departments/export-excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
     Route::resource('departments', DepartmentController::class)->except(['show']);
     Route::post('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
 

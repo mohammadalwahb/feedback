@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id' => 'ناسنامە',
     'title_en' => 'ناونیشان (EN)',
     'title_ku' => 'ناونیشان (KU)',
     'title_ar' => 'ناونیشان (AR)',
@@ -9,6 +10,9 @@ return [
     'name_ar' => 'ناو (AR)',
     'email' => 'ئیمەیڵ',
     'college' => 'کۆلێژ',
+    'college_name_en' => 'ناوی کۆلێژ (EN)',
+    'college_name_ku' => 'ناوی کۆلێژ (KU)',
+    'college_name_ar' => 'ناوی کۆلێژ (AR)',
     'department' => 'بەش',
     'semester' => 'وەرز',
     'english_name' => 'ناوی ئینگلیزی',

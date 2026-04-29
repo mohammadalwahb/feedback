@@ -3,7 +3,10 @@
 @section('content')
     <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-2xl font-bold tracking-tight text-slate-900">{{ __('nav.departments') }}</h1>
-        <a href="{{ route('admin.departments.create') }}" class="admin-btn-primary">{{ __('admin.add') }}</a>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('admin.departments.export.excel') }}" class="admin-btn-secondary py-2 text-sm">{{ __('admin.export_departments_excel') }}</a>
+            <a href="{{ route('admin.departments.create') }}" class="admin-btn-primary">{{ __('admin.add') }}</a>
+        </div>
     </div>
     <div class="overflow-x-auto admin-card">
         <table class="w-full text-left text-sm" id="tbl">

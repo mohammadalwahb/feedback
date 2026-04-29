@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id' => 'المعرّف',
     'title_en' => 'العنوان (EN)',
     'title_ku' => 'العنوان (KU)',
     'title_ar' => 'العنوان (AR)',
@@ -9,6 +10,9 @@ return [
     'name_ar' => 'الاسم (AR)',
     'email' => 'البريد',
     'college' => 'الكلية',
+    'college_name_en' => 'اسم الكلية (EN)',
+    'college_name_ku' => 'اسم الكلية (KU)',
+    'college_name_ar' => 'اسم الكلية (AR)',
     'department' => 'القسم',
     'semester' => 'الفصل',
     'english_name' => 'الاسم بالإنجليزية',

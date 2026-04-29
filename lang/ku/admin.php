@@ -15,4 +15,6 @@ return [
     'delete_all_staff_done' => ':count تۆماری مامۆستا گوازرایەوە بۆ سەبەتەی سڕینەوە.',
     'delete_all_confirmation_field' => 'دڵنیاکردنەوە',
     'delete_all_confirmation_invalid' => 'دەبێت وشەکە تەواو وەک DELETE ALL بنووسیت.',
+    'export_colleges_excel' => 'داگرتنی کۆلێژەکان (Excel)',
+    'export_departments_excel' => 'داگرتنی بەشەکان (Excel)',
 ];

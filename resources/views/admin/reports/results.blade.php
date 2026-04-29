@@ -5,11 +5,11 @@
     <p class="mb-6 max-w-3xl text-sm text-slate-600">{{ __('reports.results_intro') }}</p>
 
     <form method="get" class="admin-filter-bar">
-        <select name="college_id" class="admin-input min-w-[10rem] !mt-0">
+        <select id="report-results-college" name="college_id" class="admin-input min-w-[10rem] !mt-0">
             <option value="">{{ __('fields.college') }}</option>
             @foreach($lists['colleges'] as $c)<option value="{{ $c->id }}" @selected(($filters['college_id']??null)==$c->id)>{{ $c->name_en }}</option>@endforeach
         </select>
-        <select name="department_id" class="admin-input min-w-[10rem] !mt-0">
+        <select id="report-results-department" name="department_id" class="admin-input min-w-[10rem] !mt-0">
             <option value="">{{ __('fields.department') }}</option>
             @foreach($lists['departments'] as $d)<option value="{{ $d->id }}" @selected(($filters['department_id']??null)==$d->id)>{{ $d->name_en }}</option>@endforeach
         </select>
@@ -70,6 +70,12 @@
         </table>
     </div>
     @push('scripts')
+        @include('partials.admin-college-department-filter', [
+            'departments' => $lists['departments'],
+            'collegeElementId' => 'report-results-college',
+            'departmentElementId' => 'report-results-department',
+            'selectedDepartmentId' => $filters['department_id'] ?? null,
+        ])
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 window.initAdminDataTable('#tbl-results');

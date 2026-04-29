@@ -113,7 +113,10 @@ class StaffSubjectController extends Controller
             'instructor_name' => ['required', 'string', 'max:255'],
             'subject_name' => ['required', 'string', 'max:255'],
             'college_id' => ['required', 'exists:colleges,id'],
-            'department_id' => ['required', 'exists:departments,id'],
+            'department_id' => [
+                'required',
+                Rule::exists('departments', 'id')->where('college_id', (int) $request->input('college_id')),
+            ],
             'semester_id' => ['required', 'exists:semesters,id'],
         ]);
     }

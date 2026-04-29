@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\College;
 use App\Services\AuditLogger;
+use App\Services\DirectoryExcelExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CollegeController extends Controller
 {
     public function __construct(
-        protected AuditLogger $auditLogger
+        protected AuditLogger $auditLogger,
+        protected DirectoryExcelExportService $directoryExports,
     ) {}
 
     public function index(): View
@@ -20,6 +23,11 @@ class CollegeController extends Controller
         $items = College::query()->orderBy('name_en')->get();
 
         return view('admin.colleges.index', compact('items'));
+    }
+
+    public function exportExcel(): StreamedResponse
+    {
+        return $this->directoryExports->streamCollegesWorkbook();
     }
 
     public function create(): View

@@ -6,14 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\College;
 use App\Models\Department;
 use App\Services\AuditLogger;
+use App\Services\DirectoryExcelExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DepartmentController extends Controller
 {
     public function __construct(
-        protected AuditLogger $auditLogger
+        protected AuditLogger $auditLogger,
+        protected DirectoryExcelExportService $directoryExports,
     ) {}
 
     public function index(): View
@@ -21,6 +24,11 @@ class DepartmentController extends Controller
         $items = Department::query()->with('college')->orderBy('name_en')->get();
 
         return view('admin.departments.index', compact('items'));
+    }
+
+    public function exportExcel(): StreamedResponse
+    {
+        return $this->directoryExports->streamDepartmentsWorkbook();
     }
 
     public function create(): View

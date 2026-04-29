@@ -3,8 +3,8 @@
 @section('content')
     <h1 class="mb-6 text-2xl font-bold tracking-tight text-slate-900">{{ __('reports.special_title') }}</h1>
     <form method="get" class="admin-filter-bar">
-        <select name="college_id" class="admin-input min-w-[10rem] !mt-0"><option value="">{{ __('fields.college') }}</option>@foreach($lists['colleges'] as $c)<option value="{{ $c->id }}" @selected(($filters['college_id']??null)==$c->id)>{{ $c->name_en }}</option>@endforeach</select>
-        <select name="department_id" class="admin-input min-w-[10rem] !mt-0"><option value="">{{ __('fields.department') }}</option>@foreach($lists['departments'] as $d)<option value="{{ $d->id }}" @selected(($filters['department_id']??null)==$d->id)>{{ $d->name_en }}</option>@endforeach</select>
+        <select id="report-special-college" name="college_id" class="admin-input min-w-[10rem] !mt-0"><option value="">{{ __('fields.college') }}</option>@foreach($lists['colleges'] as $c)<option value="{{ $c->id }}" @selected(($filters['college_id']??null)==$c->id)>{{ $c->name_en }}</option>@endforeach</select>
+        <select id="report-special-department" name="department_id" class="admin-input min-w-[10rem] !mt-0"><option value="">{{ __('fields.department') }}</option>@foreach($lists['departments'] as $d)<option value="{{ $d->id }}" @selected(($filters['department_id']??null)==$d->id)>{{ $d->name_en }}</option>@endforeach</select>
         <select name="semester_id" class="admin-input min-w-[10rem] !mt-0"><option value="">{{ __('fields.semester') }}</option>@foreach($lists['semesters'] as $s)<option value="{{ $s->id }}" @selected(($filters['semester_id']??null)==$s->id)>{{ $s->name_en }}</option>@endforeach</select>
         <input name="subject" value="{{ $filters['subject'] ?? '' }}" placeholder="{{ __('fields.subject') }}" class="admin-input min-w-[8rem] !mt-0">
         <select name="form_version_id" class="admin-input min-w-[12rem] !mt-0">@foreach($versions as $v)<option value="{{ $v->id }}" @selected($versionId==$v->id)>#{{ $v->feedback_form_id }} v{{ $v->version_number }}</option>@endforeach</select>
@@ -32,5 +32,13 @@
             </tbody>
         </table>
     </div>
-    @push('scripts')<script>document.addEventListener('DOMContentLoaded',()=>{window.initAdminDataTable('#tbl');});</script>@endpush
+    @push('scripts')
+        @include('partials.admin-college-department-filter', [
+            'departments' => $lists['departments'],
+            'collegeElementId' => 'report-special-college',
+            'departmentElementId' => 'report-special-department',
+            'selectedDepartmentId' => $filters['department_id'] ?? null,
+        ])
+        <script>document.addEventListener('DOMContentLoaded',()=>{window.initAdminDataTable('#tbl');});</script>
+    @endpush
 @endsection

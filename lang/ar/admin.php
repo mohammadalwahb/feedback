@@ -15,4 +15,6 @@ return [
     'delete_all_staff_done' => 'تم نقل :count سجل(ات) تدريس إلى سلة المحذوفات.',
     'delete_all_confirmation_field' => 'تأكيد',
     'delete_all_confirmation_invalid' => 'يجب كتابة العبارة بالضبط: DELETE ALL',
+    'export_colleges_excel' => 'تنزيل الكليات (Excel)',
+    'export_departments_excel' => 'تنزيل الأقسام (Excel)',
 ];
