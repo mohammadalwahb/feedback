@@ -14,6 +14,7 @@ return [
     'reports' => 'راپۆرت',
     'results' => 'ئەنجامەکان',
     'realtime_statistics' => 'ئامارەکانی ڕاستەوخۆ',
+    'download_all_responses_excel' => 'داگرتنی هەموو وەڵامەکان (Excel)',
     'audit' => 'تۆمار',
     'logout' => 'دەرچوون',
     'login_google' => 'چوونەژوورەوە لەگەڵ گووگڵ',

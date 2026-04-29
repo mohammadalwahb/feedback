@@ -123,6 +123,10 @@
             <svg class="h-4 w-4 shrink-0 text-violet-600 opacity-80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7.5 14.25l3-3 2.25 2.25L16.5 9" /></svg>
             {{ __('nav.realtime_statistics') }}
         </a>
+        <a class="inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium text-indigo-900 transition hover:bg-white/80 hover:shadow-sm" href="{{ route('admin.reports.responses.export.excel') }}">
+            <svg class="h-4 w-4 shrink-0 text-violet-600 opacity-80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+            {{ __('nav.download_all_responses_excel') }}
+        </a>
         <a @class([
             'inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium transition',
             'bg-indigo-100 text-indigo-900 shadow-sm' => request()->routeIs('admin.audit.*'),

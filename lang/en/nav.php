@@ -14,6 +14,7 @@ return [
     'reports' => 'Reports',
     'results' => 'Results',
     'realtime_statistics' => 'Realtime statistics',
+    'download_all_responses_excel' => 'Download all responses (Excel)',
     'audit' => 'Audit log',
     'logout' => 'Sign out',
     'login_google' => 'Continue with Google',

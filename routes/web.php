@@ -83,6 +83,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('reports/results/export-excel', [ReportController::class, 'exportResultsExcel'])->name('reports.results.export.excel');
     Route::get('reports/realtime-statistics', [ReportController::class, 'realtimeStatistics'])->name('reports.realtime');
     Route::get('reports/realtime-statistics/export-excel', [ReportController::class, 'exportRealtimeStatisticsExcel'])->name('reports.realtime.export.excel');
+    Route::get('reports/responses/export-excel', [ReportController::class, 'exportAllResponsesExcel'])->name('reports.responses.export.excel');
     Route::get('reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
     Route::get('reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::get('reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');

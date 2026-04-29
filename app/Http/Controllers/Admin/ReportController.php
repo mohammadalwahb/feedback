@@ -7,6 +7,7 @@ use App\Models\FeedbackFormVersion;
 use App\Models\FeedbackQuestion;
 use App\Models\StaffSubject;
 use App\Repositories\ReportRepository;
+use App\Services\AllFeedbackResponsesExcelExportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,8 +20,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ReportController extends Controller
 {
     public function __construct(
-        protected ReportRepository $reports
+        protected ReportRepository $reports,
+        protected AllFeedbackResponsesExcelExportService $allResponsesExcel
     ) {}
+
+    public function exportAllResponsesExcel(): StreamedResponse
+    {
+        return $this->allResponsesExcel->streamWorkbook();
+    }
 
     public function participation(Request $request): View
     {

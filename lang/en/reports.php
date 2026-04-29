@@ -38,5 +38,8 @@ return [
     'excel_semester' => 'Semester',
     'excel_submissions' => 'Submissions',
     'excel_overall_avg' => 'Overall average',
+    'excel_form' => 'Form',
+    'excel_form_version' => 'Form version',
+    'excel_submitted_at' => 'Submitted at',
 ];
 

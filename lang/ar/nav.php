@@ -14,6 +14,7 @@ return [
     'reports' => 'التقارير',
     'results' => 'النتائج',
     'realtime_statistics' => 'إحصاءات لحظية',
+    'download_all_responses_excel' => 'تنزيل كل الردود (Excel)',
     'audit' => 'سجل التدقيق',
     'logout' => 'تسجيل الخروج',
     'login_google' => 'المتابعة مع Google',

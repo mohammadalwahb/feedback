@@ -38,5 +38,8 @@ return [
     'excel_semester' => 'وەرز',
     'excel_submissions' => 'ناردنەکان',
     'excel_overall_avg' => 'تێکڕای گشتی',
+    'excel_form' => 'فۆرم',
+    'excel_form_version' => 'وەشانی فۆرم',
+    'excel_submitted_at' => 'کاتی ناردن',
 ];
 

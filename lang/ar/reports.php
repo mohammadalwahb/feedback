@@ -38,5 +38,8 @@ return [
     'excel_semester' => 'الفصل',
     'excel_submissions' => 'الإجابات',
     'excel_overall_avg' => 'المتوسط العام',
+    'excel_form' => 'النموذج',
+    'excel_form_version' => 'إصدار النموذج',
+    'excel_submitted_at' => 'وقت الإرسال',
 ];
 
