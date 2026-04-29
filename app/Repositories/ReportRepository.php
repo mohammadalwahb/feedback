@@ -532,14 +532,14 @@ class ReportRepository
 
     protected function staffGroupingKey(StaffSubject $staffSubject): string
     {
-        $employeeId = trim((string) $staffSubject->staff_employee_id);
-        if ($employeeId !== '') {
-            return 'emp:'.mb_strtolower($employeeId);
-        }
-
         $name = preg_replace('/\s+/', ' ', trim((string) $staffSubject->instructor_name)) ?? '';
         if ($name !== '') {
             return 'name:'.mb_strtolower($name);
+        }
+
+        $employeeId = trim((string) $staffSubject->staff_employee_id);
+        if ($employeeId !== '') {
+            return 'emp:'.mb_strtolower($employeeId);
         }
 
         return 'row:'.$staffSubject->id;
