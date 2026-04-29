@@ -83,6 +83,7 @@
                 <input name="label_en" placeholder="Label EN" required class="admin-input">
                 <input name="label_ku" placeholder="Label KU" class="admin-input">
                 <input name="label_ar" placeholder="Label AR" class="admin-input">
+                <input type="hidden" name="is_required" value="0">
                 <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="is_required" value="1" checked> Required</label>
                 <div>
                     <label class="text-xs font-medium text-slate-500">MC options JSON (optional)</label>

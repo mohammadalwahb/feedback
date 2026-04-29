@@ -99,7 +99,7 @@ class FeedbackFormAdminService
             'label_en' => $data['label_en'],
             'label_ku' => $data['label_ku'] ?? null,
             'label_ar' => $data['label_ar'] ?? null,
-            'is_required' => (bool) ($data['is_required'] ?? true),
+            'is_required' => (bool) ($data['is_required'] ?? false),
             'sort_order' => (int) ($data['sort_order'] ?? 0),
             'options' => $data['options'] ?? null,
         ];
