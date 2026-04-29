@@ -4,6 +4,7 @@
 @endpush
 @section('title', __('nav.feedback_forms'))
 @section('content')
+    @php $isRtlLocale = in_array(app()->getLocale(), ['ar', 'ku'], true); @endphp
     <div class="mx-auto max-w-3xl px-3 pb-16 pt-4 md:px-4 md:pt-8">
         {{-- Progress --}}
         <div class="mb-8 flex max-w-md flex-col items-center gap-3 md:mx-auto">
@@ -139,6 +140,18 @@
                                 </div>
                                 @break
 
+                            @case('text')
+                            @case('note')
+                                <div class="w-full max-w-xl">
+                                    <label class="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-slate-600">
+                                        <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                        </svg>
+                                        {{ __('student.optional_comment') }}
+                                    </label>
+                                    <textarea name="per_staff[{{ $sid }}]" rows="4" class="mx-auto block w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-inner transition-colors placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" placeholder="{{ __('student.optional_comment') }}">{{ is_array($raw) ? ($raw['t'] ?? '') : '' }}</textarea>
+                                </div>
+                                @break
                             @default
                                 <div class="w-full max-w-xl">
                                     <label class="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-slate-600">
@@ -149,6 +162,7 @@
                                     </label>
                                     <textarea name="per_staff[{{ $sid }}]" rows="4" class="mx-auto block w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-inner transition-colors placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" placeholder="{{ __('student.optional_comment') }}">{{ is_array($raw) ? ($raw['t'] ?? '') : '' }}</textarea>
                                 </div>
+                                @break
                         @endswitch
                     </div>
                 </div>
@@ -157,8 +171,12 @@
             <div class="flex justify-center pt-2">
                 <button type="submit" class="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-400/30 transition hover:from-violet-500 hover:to-indigo-500 hover:shadow-xl hover:shadow-indigo-400/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     {{ __('student.next') }}
-                    <svg class="h-5 w-5 transition-transform group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    <svg class="h-5 w-5 transition-transform {{ $isRtlLocale ? 'group-hover:-translate-x-0.5' : 'group-hover:translate-x-0.5' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                        @if($isRtlLocale)
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        @else
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        @endif
                     </svg>
                 </button>
             </div>

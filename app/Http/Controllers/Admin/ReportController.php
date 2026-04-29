@@ -323,11 +323,15 @@ class ReportController extends Controller
             return array_map(fn ($pq) => [
                 'question_id' => $pq['question_id'],
                 'label' => $pq['label'],
-            ], $rows[0]['per_question']);
+            ], array_values(array_filter(
+                $rows[0]['per_question'],
+                fn ($pq) => ! in_array($pq['type'] ?? null, ['text', 'note'], true)
+            )));
         }
 
         return FeedbackQuestion::query()
             ->where('feedback_form_version_id', $versionId)
+            ->whereNotIn('type', ['text', 'note'])
             ->orderBy('sort_order')
             ->get()
             ->map(fn (FeedbackQuestion $q) => [

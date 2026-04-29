@@ -2,25 +2,35 @@
 @section('title', __('nav.feedback_forms'))
 @section('content')
     <h1 class="mb-6 text-2xl font-bold tracking-tight text-slate-900">{{ __('nav.feedback_forms') }}</h1>
-    <form method="post" action="{{ route('admin.feedback.forms.store') }}" class="admin-filter-bar mb-8 max-w-2xl items-end">
+    <form method="post" action="{{ route('admin.feedback.forms.store') }}" class="admin-card mb-8 grid gap-4 p-6 md:grid-cols-2 md:p-8">
         @csrf
-        <div class="min-w-[200px] grow">
+        <div>
             <label class="block text-sm font-medium text-slate-700">{{ __('fields.title_en') }}</label>
             <input name="title_en" required class="admin-input" placeholder="e.g. Fall 2026 evaluation">
         </div>
-        <div class="min-w-[200px] grow">
+        <div>
+            <label class="block text-sm font-medium text-slate-700">{{ __('fields.title_ku') }}</label>
+            <input name="title_ku" class="admin-input">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700">{{ __('fields.title_ar') }}</label>
+            <input name="title_ar" class="admin-input">
+        </div>
+        <div>
             <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_en') }}</label>
             <textarea name="description_en" rows="2" class="admin-input"></textarea>
         </div>
-        <div class="min-w-[200px] grow">
+        <div>
             <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_ku') }}</label>
             <textarea name="description_ku" rows="2" class="admin-input"></textarea>
         </div>
-        <div class="min-w-[200px] grow">
+        <div>
             <label class="block text-sm font-medium text-slate-700">{{ __('fields.description_ar') }}</label>
             <textarea name="description_ar" rows="2" class="admin-input"></textarea>
         </div>
-        <button type="submit" class="admin-btn-primary shrink-0">{{ __('admin.add') }}</button>
+        <div class="md:col-span-2">
+            <button type="submit" class="admin-btn-primary shrink-0">{{ __('admin.add') }}</button>
+        </div>
     </form>
     <div class="overflow-x-auto admin-card">
         <table class="w-full text-left text-sm" id="tbl">
