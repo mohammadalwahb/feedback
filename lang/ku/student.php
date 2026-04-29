@@ -17,6 +17,7 @@ return [
     'likert_scale_hint' => '١ = کەمترین · ٥ = زۆرترین',
     'review_question' => 'پرسیار',
     'selected' => 'هەڵبژاردراو',
+    'evaluated' => 'هەڵسەنگێندراو',
     'progress_short' => 'پێشڕەوت',
     'staff_to_evaluate' => 'مامۆستای پێویست بۆ هەڵسەنگاندن',
     'staff_evaluated' => 'مامۆستای هەڵسەنگێندراو',

@@ -28,6 +28,8 @@
                 $form = $version->form;
                 $titles = collect([$form?->title_en, $form?->title_ku, $form?->title_ar])->filter(fn ($x) => filled($x))->unique()->values();
                 $descriptions = collect([$form?->description_en, $form?->description_ku, $form?->description_ar])->filter(fn ($x) => filled($x))->unique()->values();
+                $evaluatedMap = collect($evaluatedStaffIds ?? [])->mapWithKeys(fn ($id) => [(int) $id => true]);
+                $remainingCount = $assigned->filter(fn ($st) => ! $evaluatedMap->has((int) $st->id))->count();
             @endphp
             <div class="mx-auto mb-8 w-full max-w-2xl rounded-2xl border border-slate-200 bg-white/95 p-5 shadow-sm">
                 <h2 class="text-lg font-semibold text-slate-900">{{ __('nav.feedback_forms') }}</h2>
@@ -73,10 +75,11 @@
                     </p>
                     <div class="grid gap-4 sm:grid-cols-2">
                         @foreach($assigned as $st)
-                            <label class="group relative block cursor-pointer">
-                                <input type="checkbox" name="staff_subject_ids[]" value="{{ $st->id }}" class="sr-only">
-                                <div class="flex h-full flex-col items-center gap-3 rounded-2xl border-2 border-slate-200 bg-white/90 p-5 text-center shadow-sm transition-all duration-200 hover:border-indigo-300 hover:shadow-md group-has-[:checked]:border-indigo-600 group-has-[:checked]:bg-indigo-50/80 group-has-[:checked]:shadow-lg group-has-[:checked]:shadow-indigo-200/40">
-                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition-colors group-has-[:checked]:bg-indigo-600 group-has-[:checked]:text-white">
+                            @php $isEvaluated = $evaluatedMap->has((int) $st->id); @endphp
+                            <label class="group relative block {{ $isEvaluated ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                <input type="checkbox" name="staff_subject_ids[]" value="{{ $st->id }}" class="sr-only" @disabled($isEvaluated)>
+                                <div class="flex h-full flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center shadow-sm transition-all duration-200 {{ $isEvaluated ? 'border-emerald-300 bg-emerald-50/70 opacity-80' : 'border-slate-200 bg-white/90 hover:border-indigo-300 hover:shadow-md group-has-[:checked]:border-indigo-600 group-has-[:checked]:bg-indigo-50/80 group-has-[:checked]:shadow-lg group-has-[:checked]:shadow-indigo-200/40' }}">
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl transition-colors {{ $isEvaluated ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500 group-has-[:checked]:bg-indigo-600 group-has-[:checked]:text-white' }}">
                                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.813-2.387M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                         </svg>
@@ -88,24 +91,35 @@
                                         </svg>
                                         {{ $st->subject_name }}
                                     </span>
-                                    <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500 opacity-0 transition-opacity group-has-[:checked]:opacity-100 group-has-[:checked]:bg-indigo-200 group-has-[:checked]:text-indigo-900">
-                                        <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                        </svg>
-                                        {{ __('student.selected') }}
-                                    </span>
+                                    @if($isEvaluated)
+                                        <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-200 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-900">
+                                            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                            </svg>
+                                            {{ __('student.evaluated') }}
+                                        </span>
+                                    @else
+                                        <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500 opacity-0 transition-opacity group-has-[:checked]:opacity-100 group-has-[:checked]:bg-indigo-200 group-has-[:checked]:text-indigo-900">
+                                            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                            </svg>
+                                            {{ __('student.selected') }}
+                                        </span>
+                                    @endif
                                 </div>
                             </label>
                         @endforeach
                     </div>
-                    <div class="flex justify-center pt-4">
-                        <button type="submit" class="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-400/30 transition hover:from-violet-500 hover:to-indigo-500 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                            </svg>
-                            {{ __('student.begin') }}
-                        </button>
-                    </div>
+                    @if($remainingCount > 0)
+                        <div class="flex justify-center pt-4">
+                            <button type="submit" class="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-400/30 transition hover:from-violet-500 hover:to-indigo-500 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                                </svg>
+                                {{ __('student.begin') }}
+                            </button>
+                        </div>
+                    @endif
                 </form>
             @endif
         @endif

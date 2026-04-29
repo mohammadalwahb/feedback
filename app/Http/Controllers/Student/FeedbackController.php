@@ -22,11 +22,14 @@ class FeedbackController extends Controller
         $student = auth()->user()->student;
         $version = $this->feedback->currentVersionForStudent($student);
         $assigned = $this->feedback->assignedStaff($student);
+        $evaluatedStaffIds = $version
+            ? $this->feedback->completedStaffSubjectIds($student, $version)
+            : [];
         $progress = $version
             ? $this->feedback->progress($student, $version)
             : ['completed' => 0, 'total' => $assigned->count()];
 
-        return view('student.feedback.index', compact('student', 'version', 'assigned', 'progress'));
+        return view('student.feedback.index', compact('student', 'version', 'assigned', 'progress', 'evaluatedStaffIds'));
     }
 
     public function start(Request $request): RedirectResponse
@@ -43,9 +46,13 @@ class FeedbackController extends Controller
         ]);
 
         $allowed = $student->evaluatableStaffSubjectIds();
+        $evaluated = $this->feedback->completedStaffSubjectIds($student, $version);
         foreach ($data['staff_subject_ids'] as $sid) {
             if (! in_array((int) $sid, $allowed, true)) {
                 throw ValidationException::withMessages(['staff_subject_ids' => __('feedback.staff_not_in_context')]);
+            }
+            if (in_array((int) $sid, $evaluated, true)) {
+                throw ValidationException::withMessages(['staff_subject_ids' => __('feedback.already_submitted')]);
             }
         }
 

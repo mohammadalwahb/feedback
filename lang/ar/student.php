@@ -17,6 +17,7 @@ return [
     'likert_scale_hint' => '١ = الأدنى · ٥ = الأعلى',
     'review_question' => 'السؤال',
     'selected' => 'محدد',
+    'evaluated' => 'تم التقييم',
     'progress_short' => 'تقدمك',
     'staff_to_evaluate' => 'أعضاء التدريس المطلوب تقييمهم',
     'staff_evaluated' => 'أعضاء التدريس الذين تم تقييمهم',

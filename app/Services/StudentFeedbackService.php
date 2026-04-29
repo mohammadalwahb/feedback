@@ -49,6 +49,21 @@ class StudentFeedbackService
     }
 
     /**
+     * @return list<int>
+     */
+    public function completedStaffSubjectIds(Student $student, FeedbackFormVersion $version): array
+    {
+        return FeedbackSubmission::query()
+            ->where('student_id', $student->id)
+            ->where('feedback_form_version_id', $version->id)
+            ->distinct()
+            ->pluck('staff_subject_id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+    }
+
+    /**
      * @param  list<int>  $staffSubjectIds
      * @param  array<string, array<string, mixed>>  $answersByStaffSerialized questionId as string key inner: value payload
      */

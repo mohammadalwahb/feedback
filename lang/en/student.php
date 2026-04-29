@@ -17,6 +17,7 @@ return [
     'likert_scale_hint' => '1 = lowest · 5 = highest',
     'review_question' => 'Question',
     'selected' => 'Selected',
+    'evaluated' => 'Evaluated',
     'progress_short' => 'Your progress',
     'staff_to_evaluate' => 'Staff to evaluate',
     'staff_evaluated' => 'Staff evaluated',
