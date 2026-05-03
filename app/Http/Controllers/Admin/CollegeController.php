@@ -20,7 +20,7 @@ class CollegeController extends Controller
 
     public function index(): View
     {
-        $items = College::query()->orderBy('name_en')->get();
+        $items = College::query()->withCount('students')->orderBy('name_en')->get();
 
         return view('admin.colleges.index', compact('items'));
     }

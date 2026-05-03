@@ -15,6 +15,7 @@
                     <th class="p-3">{{ __('fields.name_en') }}</th>
                     <th class="p-3">{{ __('fields.name_ku') }}</th>
                     <th class="p-3">{{ __('fields.name_ar') }}</th>
+                    <th class="p-3 text-right">{{ __('fields.students_count') }}</th>
                     <th class="p-3"></th>
                 </tr>
             </thead>
@@ -24,6 +25,7 @@
                         <td class="p-3">{{ $c->name_en }}</td>
                         <td class="p-3">{{ $c->name_ku }}</td>
                         <td class="p-3">{{ $c->name_ar }}</td>
+                        <td class="p-3 text-right tabular-nums">{{ $c->students_count }}</td>
                         <td class="p-3 text-right">
                             <a href="{{ route('admin.colleges.edit', $c) }}" class="text-indigo-600 hover:underline">{{ __('admin.edit') }}</a>
                             <form action="{{ route('admin.colleges.destroy', $c) }}" method="post" class="inline" onsubmit="return confirm('{{ __('admin.confirm_delete') }}')">

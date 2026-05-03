@@ -21,6 +21,11 @@ class College extends Model
         return $this->hasMany(Department::class);
     }
 
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
+
     public function localizedName(?string $locale = null): string
     {
         $locale ??= app()->getLocale();

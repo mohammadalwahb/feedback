@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Department;
 use App\Models\FeedbackForm;
+use App\Policies\DepartmentPolicy;
 use App\Policies\FeedbackFormPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(FeedbackForm::class, FeedbackFormPolicy::class);
+        Gate::policy(Department::class, DepartmentPolicy::class);
     }
 }

@@ -13,6 +13,7 @@ return [
     'name_ar' => 'ناو (AR)',
     'email' => 'ئیمەیڵ',
     'college' => 'کۆلێژ',
+    'students_count' => 'ژمارەی قوتابیان',
     'college_name_en' => 'ناوی کۆلێژ (EN)',
     'college_name_ku' => 'ناوی کۆلێژ (KU)',
     'college_name_ar' => 'ناوی کۆلێژ (AR)',

@@ -21,5 +21,12 @@ return [
     'delete_form_responses_prompt' => 'DELETE RESPONSES بنووسە بۆ سڕینەوەی هەموو ناردنەکانی ئەم فۆرمە بە شێوەی کۆتایی.',
     'delete_form_responses_confirmation_invalid' => 'دەبێت وشەکە تەواو وەک DELETE RESPONSES بنووسیت.',
     'delete_form_responses_done' => ':count ناردن/هەڵسەنگاندن بۆ ئەم فۆرمە سڕایەوە.',
+    'delete_department_responses' => 'سڕینەوەی وەڵامەکان',
+    'delete_department_responses_prompt' => 'DELETE RESPONSES بنووسە بۆ سڕینەوەی هەمیشەیی هەموو ناردن و ڕەشنووسەکانی هەڵسەنگاندن بۆ قوتابیانی ئەم بەشە (ناتوانرێت بگەڕێنرێتەوە).',
+    'delete_department_responses_confirmation_invalid' => 'دەبێت وشەکە تەواو وەک DELETE RESPONSES بنووسیت.',
+    'delete_department_responses_done' => ':count ناردن/هەڵسەنگاندن بۆ ئەم بەشە بە هەمیشەیی سڕایەوە.',
+    'delete_department_students' => 'سڕینەوەی قوتابیان',
+    'delete_department_students_prompt' => 'DELETE ALL بنووسە بۆ سڕینەوەی هەمیشەیی هەموو قوتابیانی ئەم بەشە و هەموو داتای هەڵسەنگاندنیان. ناتوانرێت بگەڕێنرێتەوە.',
+    'delete_department_students_done' => ':count قوتابی لەم بەشە بە شێوەی هەمیشەیی سڕایەوە.',
 ];
 

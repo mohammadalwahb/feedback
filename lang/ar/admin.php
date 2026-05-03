@@ -21,5 +21,12 @@ return [
     'delete_form_responses_prompt' => 'اكتب DELETE RESPONSES لحذف جميع الردود لهذا النموذج نهائياً.',
     'delete_form_responses_confirmation_invalid' => 'يجب كتابة العبارة بالضبط: DELETE RESPONSES',
     'delete_form_responses_done' => 'تم حذف :count رد/تقييم لهذا النموذج.',
+    'delete_department_responses' => 'حذف الردود',
+    'delete_department_responses_prompt' => 'اكتب DELETE RESPONSES لإزالة جميع إرسالات التقييم والمسودات لطلاب هذا القسم نهائياً (لا يمكن استعادتها).',
+    'delete_department_responses_confirmation_invalid' => 'يجب كتابة العبارة بالضبط: DELETE RESPONSES',
+    'delete_department_responses_done' => 'تم إزالة :count إرسال/تقييم من هذا القسم نهائياً.',
+    'delete_department_students' => 'حذف الطلاب',
+    'delete_department_students_prompt' => 'اكتب DELETE ALL لحذف جميع طلاب هذا القسم نهائياً مع جميع بيانات التقييم الخاصة بهم. لا يمكن التراجع.',
+    'delete_department_students_done' => 'تم حذف :count طالب(ة) في هذا القسم نهائياً.',
 ];
 

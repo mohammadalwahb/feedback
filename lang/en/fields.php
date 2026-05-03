@@ -13,6 +13,7 @@ return [
     'name_ar' => 'Name (AR)',
     'email' => 'Email',
     'college' => 'College',
+    'students_count' => 'Students',
     'college_name_en' => 'College name (EN)',
     'college_name_ku' => 'College name (KU)',
     'college_name_ar' => 'College name (AR)',

@@ -38,6 +38,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('colleges/{id}/restore', [CollegeController::class, 'restore'])->name('colleges.restore');
 
     Route::get('departments/export-excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
+    Route::post('departments/{department}/delete-responses', [DepartmentController::class, 'destroyResponses'])->name('departments.delete-responses');
+    Route::post('departments/{department}/delete-students', [DepartmentController::class, 'destroyStudents'])->name('departments.delete-students');
     Route::resource('departments', DepartmentController::class)->except(['show']);
     Route::post('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
 

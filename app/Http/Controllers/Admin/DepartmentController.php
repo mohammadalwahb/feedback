@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\DeleteDepartmentResponsesRequest;
+use App\Http\Requests\Admin\DeleteDepartmentStudentsRequest;
 use App\Models\College;
 use App\Models\Department;
 use App\Services\AuditLogger;
+use App\Services\DepartmentAdminService;
 use App\Services\DirectoryExcelExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,11 +20,16 @@ class DepartmentController extends Controller
     public function __construct(
         protected AuditLogger $auditLogger,
         protected DirectoryExcelExportService $directoryExports,
+        protected DepartmentAdminService $departmentAdmin,
     ) {}
 
     public function index(): View
     {
-        $items = Department::query()->with('college')->orderBy('name_en')->get();
+        $items = Department::query()
+            ->with('college')
+            ->withCount('students')
+            ->orderBy('name_en')
+            ->get();
 
         return view('admin.departments.index', compact('items'));
     }
@@ -88,5 +96,21 @@ class DepartmentController extends Controller
         $this->auditLogger->log($request->user(), 'department.restored', $department);
 
         return redirect()->route('admin.departments.index')->with('ok', __('messages.restored'));
+    }
+
+    public function destroyResponses(DeleteDepartmentResponsesRequest $request, Department $department): RedirectResponse
+    {
+        $deleted = $this->departmentAdmin->deleteFeedbackForDepartment($department, $request->user());
+
+        return redirect()->route('admin.departments.index')
+            ->with('ok', __('admin.delete_department_responses_done', ['count' => $deleted]));
+    }
+
+    public function destroyStudents(DeleteDepartmentStudentsRequest $request, Department $department): RedirectResponse
+    {
+        $count = $this->departmentAdmin->permanentlyDeleteStudentsForDepartment($department, $request->user());
+
+        return redirect()->route('admin.departments.index')
+            ->with('ok', __('admin.delete_department_students_done', ['count' => $count]));
     }
 }

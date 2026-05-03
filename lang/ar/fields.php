@@ -13,6 +13,7 @@ return [
     'name_ar' => 'الاسم (AR)',
     'email' => 'البريد',
     'college' => 'الكلية',
+    'students_count' => 'عدد الطلاب',
     'college_name_en' => 'اسم الكلية (EN)',
     'college_name_ku' => 'اسم الكلية (KU)',
     'college_name_ar' => 'اسم الكلية (AR)',

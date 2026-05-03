@@ -21,5 +21,12 @@ return [
     'delete_form_responses_prompt' => 'Type DELETE RESPONSES to permanently delete all submissions for this form.',
     'delete_form_responses_confirmation_invalid' => 'You must type the exact phrase DELETE RESPONSES to confirm.',
     'delete_form_responses_done' => 'Deleted :count submission(s) for this form.',
+    'delete_department_responses' => 'Delete responses',
+    'delete_department_responses_prompt' => 'Type DELETE RESPONSES to permanently remove all feedback submissions and drafts for students in this department (cannot be restored).',
+    'delete_department_responses_confirmation_invalid' => 'You must type the exact phrase DELETE RESPONSES to confirm.',
+    'delete_department_responses_done' => 'Permanently removed :count submission(s) for this department.',
+    'delete_department_students' => 'Delete students',
+    'delete_department_students_prompt' => 'Type DELETE ALL to permanently delete every student in this department and all of their feedback data. This cannot be undone.',
+    'delete_department_students_done' => 'Permanently deleted :count student(s) in this department.',
 ];
 
