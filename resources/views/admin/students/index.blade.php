@@ -17,7 +17,7 @@
     <div class="overflow-x-auto admin-card">
         <table class="w-full text-left text-sm" id="tbl">
             <thead class="admin-table-head">
-                <tr><th class="p-3">{{ __('fields.email') }}</th><th class="p-3">{{ __('fields.name_en') }}</th><th class="p-3">{{ __('fields.college') }}</th><th class="p-3"></th></tr>
+                <tr><th class="p-3">{{ __('fields.email') }}</th><th class="p-3">{{ __('fields.name_en') }}</th><th class="p-3">{{ __('fields.college') }}</th><th class="p-3">{{ __('fields.semester') }}</th><th class="p-3"></th></tr>
             </thead>
             <tbody>
                 @foreach($items as $s)
@@ -25,6 +25,7 @@
                         <td class="p-3">{{ $s->email }}</td>
                         <td class="p-3">{{ $s->english_name }}</td>
                         <td class="p-3">{{ $s->college?->name_en }}</td>
+                        <td class="p-3">{{ $s->semester?->name_en }}</td>
                         <td class="p-3 text-right whitespace-nowrap">
                             <a href="{{ route('admin.students.edit', $s) }}" class="text-indigo-600">{{ __('admin.edit') }}</a>
                             <form action="{{ route('admin.students.destroy', $s) }}" method="post" class="inline" onsubmit="return confirm('{{ __('admin.confirm_delete') }}')">@csrf @method('DELETE')
