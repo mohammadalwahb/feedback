@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\FeedbackQuestionType;
 use App\Models\FeedbackQuestion;
 use App\Models\FeedbackSubmission;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -52,65 +51,97 @@ class AllFeedbackResponsesExcelExportService
         ];
 
         $headers = array_merge($staticHeaders, array_column($questionColumns, 'header'));
-
-        $colIndex = 1;
-        foreach ($headers as $header) {
-            $sheet->setCellValue(Coordinate::stringFromColumnIndex($colIndex).'1', $header);
-            $colIndex++;
-        }
+        $sheet->fromArray([$headers], null, 'A1', true);
 
         $questionIds = array_column($questionColumns, 'id');
+        /** @var array<int, FeedbackQuestionType> $questionTypesById */
+        $questionTypesById = $questions->keyBy('id')->map(fn (FeedbackQuestion $q) => $q->type)->all();
+
         $r = 2;
 
-        $query = FeedbackSubmission::query()
+        $baseQuery = FeedbackSubmission::query()
             ->with([
                 'version' => fn ($q) => $q->withTrashed()->with([
                     'form' => fn ($fq) => $fq->withTrashed(),
                 ]),
-                'answers' => fn ($q) => $q->with(['question' => fn ($qq) => $qq->withTrashed()]),
+                'answers',
                 'staffSubject' => fn ($q) => $q->withTrashed()->with([
                     'college' => fn ($cq) => $cq->withTrashed(),
                     'department' => fn ($dq) => $dq->withTrashed(),
                     'semester' => fn ($sq) => $sq->withTrashed(),
                 ]),
-            ])
-            ->orderBy('submitted_at')
-            ->orderBy('id');
+            ]);
 
-        foreach ($query->cursor() as $submission) {
-            $st = $submission->staffSubject;
-            $college = $st?->college?->name_en ?? '';
-            $department = $st?->department?->name_en ?? '';
-            $staff = $st?->instructor_name ?? '';
-            $semester = $st?->semester ? ($st->semester->name_en ?? $st->semester->localizedName()) : '';
-            $subject = $st?->subject_name ?? '';
-            $formTitle = $submission->version?->form?->title_en ?? '';
-            $versionNo = $submission->version?->version_number ?? '';
-            $submittedAt = $submission->submitted_at?->format('Y-m-d H:i:s') ?? '';
+        $table = (new FeedbackSubmission)->getTable();
+        $qualifiedSubmittedAt = $table.'.submitted_at';
+        $qualifiedKey = $table.'.id';
+        $cursorSubmittedAt = '1970-01-01 00:00:00';
+        $cursorId = 0;
+        $chunkSize = 1000;
 
-            $byQ = $submission->answers->keyBy('feedback_question_id');
+        while (true) {
+            $batch = (clone $baseQuery)
+                ->whereRaw(
+                    "({$qualifiedSubmittedAt}, {$qualifiedKey}) > (?, ?)",
+                    [$cursorSubmittedAt, $cursorId]
+                )
+                ->orderBy($qualifiedSubmittedAt)
+                ->orderBy($qualifiedKey)
+                ->limit($chunkSize)
+                ->get();
 
-            $colIndex = 1;
-            foreach ([$college, $department, $staff, $semester, $subject, $formTitle, $versionNo, $submittedAt] as $cell) {
-                $sheet->setCellValue(Coordinate::stringFromColumnIndex($colIndex).(string) $r, $cell);
-                $colIndex++;
+            if ($batch->isEmpty()) {
+                break;
             }
 
-            foreach ($questionIds as $qid) {
-                $ans = $byQ->get($qid);
-                $q = $ans?->question;
-                $raw = $ans?->value;
-                $text = '';
-                if (is_array($raw)) {
-                    $text = $q instanceof FeedbackQuestion
-                        ? $this->formatAnswerCell($q->type, $raw)
-                        : (string) json_encode($raw, JSON_UNESCAPED_UNICODE);
+            $rows = [];
+
+            foreach ($batch as $submission) {
+                $st = $submission->staffSubject;
+                $college = $st?->college?->name_en ?? '';
+                $department = $st?->department?->name_en ?? '';
+                $staff = $st?->instructor_name ?? '';
+                $semester = $st?->semester ? ($st->semester->name_en ?? $st->semester->localizedName()) : '';
+                $subject = $st?->subject_name ?? '';
+                $formTitle = $submission->version?->form?->title_en ?? '';
+                $versionNo = $submission->version?->version_number ?? '';
+                $submittedAt = $submission->submitted_at?->format('Y-m-d H:i:s') ?? '';
+
+                $byQ = $submission->answers->keyBy('feedback_question_id');
+
+                $row = [
+                    $college,
+                    $department,
+                    $staff,
+                    $semester,
+                    $subject,
+                    $formTitle,
+                    $versionNo,
+                    $submittedAt,
+                ];
+
+                foreach ($questionIds as $qid) {
+                    $ans = $byQ->get($qid);
+                    $raw = $ans?->value;
+                    $text = '';
+                    if (is_array($raw)) {
+                        $type = $questionTypesById[$qid] ?? null;
+                        $text = $type instanceof FeedbackQuestionType
+                            ? $this->formatAnswerCell($type, $raw)
+                            : (string) json_encode($raw, JSON_UNESCAPED_UNICODE);
+                    }
+                    $row[] = $text;
                 }
-                $sheet->setCellValue(Coordinate::stringFromColumnIndex($colIndex).(string) $r, $text);
-                $colIndex++;
+
+                $rows[] = $row;
             }
 
-            $r++;
+            $sheet->fromArray($rows, null, 'A'.$r, true);
+            $r += count($rows);
+
+            $last = $batch->last();
+            $cursorSubmittedAt = $last->submitted_at->format('Y-m-d H:i:s');
+            $cursorId = $last->id;
         }
 
         return $this->streamXlsx($spreadsheet, 'all-feedback-responses');
@@ -145,6 +176,7 @@ class AllFeedbackResponsesExcelExportService
     protected function streamXlsx(Spreadsheet $spreadsheet, string $basename): StreamedResponse
     {
         $writer = new Xlsx($spreadsheet);
+        $writer->setPreCalculateFormulas(false);
         $tmp = tempnam(sys_get_temp_dir(), 'xlsx');
         $writer->save($tmp);
         $filename = $basename.'-'.now()->format('Y-m-d').'.xlsx';
